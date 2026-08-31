@@ -1,0 +1,44 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  # 1. SECCIÓN NOTICIAS
+  - name: "noticias"
+    label: "Noticias"
+    folder: "content/noticias"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Autor", name: "author", widget: "string", default: "SUTE Jubilados"}
+      - {label: "Imagen de Portada", name: "image", widget: "image", required: false}
+      - {label: "Resumen", name: "description", widget: "text", required: false}
+      - {label: "Cuerpo de la Noticia", name: "body", widget: "markdown"}
+
+  # 2. SECCIÓN COLUMNAS DE OPINIÓN
+  - name: "opinion"
+    label: "Columnas de Opinión"
+    folder: "content/opinion"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título del Artículo", name: "title", widget: "string"}
+      - {label: "Autor / Profesor", name: "author", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Texto Completo", name: "body", widget: "markdown"}
+
+  # 3. SECCIÓN COMUNICADOS OFICIALES
+  - name: "comunicados"
+    label: "Comunicados Oficiales"
+    folder: "content/comunicados"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título del Comunicado", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Documento o Contenido", name: "body", widget: "markdown"}
