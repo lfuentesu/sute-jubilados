@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administración - SUTE Jubilados</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    window.CMS_MANUAL_INIT = true;
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      CMS.init({
+        config: {
+          backend: {
+            name: 'git-gateway',
+            branch: 'main'
+          },
+          local_backend: true,
+          media_folder: 'img',
+          public_folder: 'img',
+          collections: [
+            {
+              name: 'noticias',
+              label: 'Noticias y Comunicados',
+              folder: 'contenido/noticias',
+              create: true,
+              slug: '{{year}}-{{month}}-{{day}}-{{slug}}',
+              fields: [
+                { label: 'Título del Comunicado', name: 'title', widget: 'string' },
+                { label: 'Fecha de Publicación', name: 'date', widget: 'datetime', format: 'YYYY-MM-DD' },
+                { label: 'Correo del Remitente', name: 'remitente', widget: 'string', hint: 'Ej: directiva@sutejubilados.cl' },
+                { label: 'Resumen Breve', name: 'resumen', widget: 'text' },
+                { label: 'Cuerpo del Comunicado', name: 'body', widget: 'markdown' }
+              ]
+            }
+          ]
+        }
+      });
+    });
+  </script>
+</body>
+</html>
