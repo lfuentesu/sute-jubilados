@@ -3,18 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUTE Jubilados - Trabajadores de la Educación</title>
+  <title>SUTE Pensionados - Trabajadores de la Educación</title>
   <link rel="stylesheet" href="css/estilos.css">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
 <body>
 
   <!-- Encabezado y Navegación -->
   <header class="site-header">
     <div class="header-container">
       <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-        <img src="img/logo.jpeg" alt="Logo SUTE Jubilados" style="max-height: 55px; width: auto;">
+        <img src="img/logo.jpeg" alt="Logo SUTE Pensionados" style="max-height: 55px; width: auto;">
         <div>
-          <h2>SUTE JUBILADOS</h2>
+          <h2>SUTE PENSIONADOS</h2>
           <span>Trabajadores con Daño Previsional</span>
         </div>
       </div>
@@ -33,7 +45,7 @@
   <!-- Banner Principal -->
   <section class="hero">
     <div class="hero-content">
-      <h1>Sindicato de Trabajadores de la Educación Jubilados</h1>
+      <h1>Sindicato de Trabajadores de la Educación Pensionados</h1>
       <p>Memoria, Dignidad y Lucha Social por Pensiones Justas</p>
       <div class="hero-buttons">
         <a href="contacto.html" class="btn btn-primary">Súmate al Sindicato</a>
@@ -52,29 +64,27 @@
   <!-- Contenido Principal -->
   <main class="container main-content">
     
-    <!-- Bloque 1: Noticias y Comunicados -->
+    <!-- Bloque 1: Noticias Generales (Dinámico) -->
     <section id="noticias" class="section-block">
-      <h2>Últimos Comunicados y Noticias</h2>
-      <div class="grid-3">
-        
-        <article class="card">
-          <h3>Constitución del Sindicato</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">22 de Agosto, 2026</p>
-          <p>Avanzamos firmes en la organización de docentes, asistentes, administrativos y auxiliares de la educación.</p>
-        </article>
+      <h2>Últimas Noticias</h2>
+      <div id="noticias-grid" class="grid-3">
+        <p>Cargando noticias...</p>
+      </div>
+    </section>
 
-        <article class="card">
-          <h3>Exposición sobre el Daño Previsional</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">20 de Agosto, 2026</p>
-          <p>Análisis detallado de los montos de las pensiones en el sector y las exigencias de reparación histórica.</p>
-        </article>
+    <!-- Bloque 2: Columnas de Opinión (Dinámico) -->
+    <section id="opinion" class="section-block">
+      <h2>Columnas de Opinión</h2>
+      <div id="opinion-grid" class="grid-3">
+        <p>Cargando opiniones...</p>
+      </div>
+    </section>
 
-        <article class="card">
-          <h3>Convocatoria a Asamblea General</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">15 de Agosto, 2026</p>
-          <p>Invitación a todas las compañeras y compañeros a participar en la definición de nuestro petitorio.</p>
-        </article>
-
+    <!-- Bloque 3: Comunicados Oficiales (Dinámico) -->
+    <section id="comunicados" class="section-block">
+      <h2>Comunicados Oficiales</h2>
+      <div id="comunicados-grid" class="grid-3">
+        <p>Cargando comunicados...</p>
       </div>
     </section>
 
@@ -125,9 +135,52 @@
   <!-- Pie de Página -->
   <footer class="site-footer">
     <div class="container footer-content">
-      <p>&copy; 2026 Sindicato SUTE Jubilados - Trabajadores de la Educación. Todos los derechos reservados.</p>
+      <p>&copy; 2026 Sindicato SUTE Pensionados - Trabajadores de la Educación. Todos los derechos reservados.</p>
     </div>
   </footer>
+
+  <!-- Script de carga dinámica desde la API de GitHub -->
+  <script>
+    async function cargarPublicaciones(carpeta, contenedorId) {
+      const contenedor = document.getElementById(contenedorId);
+      const usuarioRepo = "lfuentesu/sute-jubilados";
+      const urlApi = `https://api.github.com/repos/${usuarioRepo}/contents/_posts/${carpeta}`;
+
+      try {
+        const respuesta = await fetch(urlApi);
+        if (!respuesta.ok) throw new Error("Sin entradas");
+        const archivos = await respuesta.json();
+        
+        contenedor.innerHTML = "";
+        
+        for (const archivo of archivos) {
+          if (archivo.name.endsWith(".md") || archivo.name.endsWith(".html")) {
+            const contenidoRes = await fetch(archivo.download_url);
+            let texto = await contenidoRes.text();
+            
+            let titulo = archivo.name.replace(/-/g, " ").replace(/\.[^/.]+$/, "");
+            let cuerpoTexto = texto.replace(/^---[\s\S]*?---/, "").trim();
+
+            const articulo = document.createElement("article");
+            articulo.className = "card";
+            articulo.innerHTML = `
+              <h3>${titulo}</h3>
+              <div>${cuerpoTexto}</div>
+            `;
+            contenedor.appendChild(articulo);
+          }
+        }
+      } catch (e) {
+        contenedor.innerHTML = "<p style='color: var(--text-muted); font-style: italic;'>No hay publicaciones disponibles por el momento.</p>";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarPublicaciones("noticias", "noticias-grid");
+      cargarPublicaciones("opinion", "opinion-grid");
+      cargarPublicaciones("comunicados", "comunicados-grid");
+    });
+  </script>
 
 </body>
 </html>
