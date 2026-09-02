@@ -33,10 +33,12 @@
       <nav class="main-nav">
         <ul>
           <li><a href="index.html" class="active">Inicio</a></li>
-          <li><a href="quienes-somos.html">Quiénes Somos</a></li>
-          <li><a href="dano.html">Daño Previsional</a></li>
+          <li><a href="#editorial">Editorial</a></li>
+          <li><a href="#cartas">Cartas de Opinión</a></li>
           <li><a href="#noticias">Noticias</a></li>
-          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="#humor">Humor</a></li>
+          <li><a href="nuestra-historia.html">Nuestra Historia</a></li>
+          <li><a href="contacto.html">Contactos</a></li>
         </ul>
       </nav>
     </div>
@@ -49,84 +51,43 @@
       <p>Memoria, Dignidad y Lucha Social por Pensiones Justas</p>
       <div class="hero-buttons">
         <a href="contacto.html" class="btn btn-primary">Súmate al Sindicato</a>
-        <a href="dano.html" class="btn btn-secondary">Conoce Nuestras Demandas</a>
+        <a href="nuestra-historia.html" class="btn btn-secondary">Conoce Nuestra Historia</a>
       </div>
-    </div>
-  </section>
-
-  <!-- Barra de Alerta -->
-  <section class="alert-bar">
-    <div class="container">
-      <strong>ÚLTIMA HORA:</strong> Declaración pública de la directiva sobre el avance de las demandas previsionales. <a href="#noticias">Leer más &rarr;</a>
     </div>
   </section>
 
   <!-- Contenido Principal -->
   <main class="container main-content">
     
-    <!-- Bloque 1: Noticias Generales (Dinámico) -->
+    <!-- Editorial -->
+    <section id="editorial" class="section-block">
+      <h2>Editorial</h2>
+      <div id="editorial-grid" class="grid-3">
+        <p>Cargando editorial...</p>
+      </div>
+    </section>
+
+    <!-- Cartas de Opinión -->
+    <section id="cartas" class="section-block">
+      <h2>Cartas de Opinión</h2>
+      <div id="cartas-grid" class="grid-3">
+        <p>Cargando cartas de opinión...</p>
+      </div>
+    </section>
+
+    <!-- Noticias -->
     <section id="noticias" class="section-block">
-      <h2>Últimas Noticias</h2>
+      <h2>Noticias</h2>
       <div id="noticias-grid" class="grid-3">
         <p>Cargando noticias...</p>
       </div>
     </section>
 
-    <!-- Bloque 2: Columnas de Opinión (Dinámico) -->
-    <section id="opinion" class="section-block">
-      <h2>Columnas de Opinión</h2>
-      <div id="opinion-grid" class="grid-3">
-        <p>Cargando opiniones...</p>
-      </div>
-    </section>
-
-    <!-- Bloque 3: Comunicados Oficiales (Dinámico) -->
-    <section id="comunicados" class="section-block">
-      <h2>Comunicados Oficiales</h2>
-      <div id="comunicados-grid" class="grid-3">
-        <p>Cargando comunicados...</p>
-      </div>
-    </section>
-
-    <!-- BLOQUE: Agenda y Asambleas -->
-    <section class="section-block">
-      <h2>Próximas Asambleas y Encuentros</h2>
-      <p>Espacios de participación para socias, socios y trabajadores convocados:</p>
-      
-      <ul class="events-list">
-        <li class="event-item">
-          <div>
-            <strong>Asamblea General Ordinaria</strong>
-            <p style="font-size: 0.9rem; color: var(--text-muted);">Definición del plan de trabajo comunal y comisiones.</p>
-          </div>
-          <span class="event-date">10 SEP - 16:00 HRS</span>
-        </li>
-        <li class="event-item">
-          <div>
-            <strong>Mesa Informativa: Estado de la Ley de Reparación</strong>
-            <p style="font-size: 0.9rem; color: var(--text-muted);">Charla orientativa abierta a todo el sector educación.</p>
-          </div>
-          <span class="event-date">25 SEP - 17:30 HRS</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- BLOQUE: Enlaces de Interés -->
-    <section class="section-block">
-      <h2>Enlaces de Interés Institucional</h2>
-      <div class="grid-3">
-        <div class="link-box">
-          <p>📜 Documentos y Leyes</p>
-          <a href="#" target="_blank">Estatutos del Sindicato</a>
-        </div>
-        <div class="link-box">
-          <p>🏛️ Trámites Públicos</p>
-          <a href="https://www.chileatiende.gob.cl" target="_blank">Portal ChileAtiende</a>
-        </div>
-        <div class="link-box">
-          <p>🎓 Sector Educación</p>
-          <a href="https://www.mineduc.cl" target="_blank">Ministerio de Educación</a>
-        </div>
+    <!-- Humor -->
+    <section id="humor" class="section-block">
+      <h2>Humor</h2>
+      <div id="humor-grid" class="grid-3">
+        <p>Cargando publicaciones de humor...</p>
       </div>
     </section>
 
@@ -139,7 +100,7 @@
     </div>
   </footer>
 
-  <!-- Script de carga dinámica desde la API de GitHub -->
+  <!-- Carga dinámica de secciones -->
   <script>
     async function cargarPublicaciones(carpeta, contenedorId) {
       const contenedor = document.getElementById(contenedorId);
@@ -176,9 +137,10 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      cargarPublicaciones("editorial", "editorial-grid");
+      cargarPublicaciones("cartas", "cartas-grid");
       cargarPublicaciones("noticias", "noticias-grid");
-      cargarPublicaciones("opinion", "opinion-grid");
-      cargarPublicaciones("comunicados", "comunicados-grid");
+      cargarPublicaciones("humor", "humor-grid");
     });
   </script>
 
