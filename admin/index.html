@@ -7,44 +7,6 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Carga de Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script>
-        // Función para cargar publicaciones desde una carpeta
-        async function cargarPublicaciones(carpeta, contenedorId) {
-            const contenedor = document.getElementById(contenedorId);
-            try {
-                // Consultar archivos subidos en GitHub/Netlify
-                const respuesta = await fetch(`https://api.github.com/repos/lfuentesu/sute-jubilados/contents/_posts/${carpeta}`);
-                if (!respuesta.ok) {
-                    contenedor.innerHTML = '<p>No hay publicaciones recientes en esta sección.</p>';
-                    return;
-                }
-                const archivos = await respuesta.json();
-                contenedor.innerHTML = ''; // Limpiar el mensaje "Cargando..."
-
-                for (const archivo of archivos) {
-                    if (archivo.name.endsWith('.md') || archivo.name.endsWith('.html')) {
-                        const resContenido = await fetch(archivo.download_url);
-                        const texto = await resContenido.text();
-                        
-                        const articulo = document.createElement('article');
-                        articulo.innerHTML = `<div>${texto}</div>`;
-                        contenedor.appendChild(articulo);
-                    }
-                }
-            } catch (error) {
-                contenedor.innerHTML = '<p>No hay contenido publicado aún.</p>';
-            }
-        }
-
-        // Ejecutar la carga para cada sección
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarPublicaciones('editorial', 'contenido-editorial');
-            cargarPublicaciones('cartas', 'contenido-cartas');
-            cargarPublicaciones('noticias', 'contenido-noticias');
-            cargarPublicaciones('humor', 'contenido-humor');
-        });
-    </script>
 </body>
 </html>
