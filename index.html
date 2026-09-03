@@ -1,13 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Management System</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUTE Pensionados - Trabajadores de la Educación</title>
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-  <!-- Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <header>
+        <div class="contenedor">
+            <img src="img/logo.png" alt="Logo SUTE" class="logo">
+            <h1>SUTE Pensionados</h1>
+            <p>Sección Pensionados y Jubilados de la Educación</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#editorial">Editorial</a></li>
+                <li><a href="#cartas">Cartas de Opinión</a></li>
+                <li><a href="#noticias">Noticias</a></li>
+                <li><a href="#humor">Humor</a></li>
+                <li><a href="nuestra-historia.html">Nuestra Historia</a></li>
+                <li><a href="contacto.html">Contactos</a></li>
+                <li><a href="admin/">Acceso CMS</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section id="editorial">
+            <h2>Editorial</h2>
+            <article id="contenido-editorial">
+                <p>Cargando editorial...</p>
+            </article>
+        </section>
+
+        <section id="cartas">
+            <h2>Cartas de Opinión</h2>
+            <div id="contenido-cartas">
+                <p>Cargando cartas...</p>
+            </div>
+        </section>
+
+        <section id="noticias">
+            <h2>Noticias</h2>
+            <div id="contenido-noticias">
+                <p>Cargando noticias...</p>
+            </div>
+        </section>
+
+        <section id="humor">
+            <h2>Humor</h2>
+            <div id="contenido-humor">
+                <p>Cargando contenido...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SUTE Pensionados. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>

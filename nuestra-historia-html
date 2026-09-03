@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuestra Historia - SUTE Pensionados</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header><h1>Nuestra Historia</h1><a href="index.html">← Volver al inicio</a></header>
+    <main><p>Reseña histórica de SUTE Pensionados...</p></main>
+</body>
+</html>
