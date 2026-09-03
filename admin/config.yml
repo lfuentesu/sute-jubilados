@@ -1,45 +1,47 @@
 backend:
-  name: github
-  repo: lfuentesu/sute-jubilados
+  name: git-gateway
   branch: master
 
-media_folder: "img/uploads"
-public_folder: "/img/uploads"
+media_folder: "img"
+public_folder: "img"
 
 collections:
   - name: "editorial"
     label: "Editorial"
     folder: "_posts/editorial"
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
       - {label: "Contenido", name: "body", widget: "markdown"}
 
   - name: "cartas"
     label: "Cartas de Opinión"
     folder: "_posts/cartas"
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Título", name: "title", widget: "string"}
+      - {label: "Autor", name: "author", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
       - {label: "Contenido", name: "body", widget: "markdown"}
 
   - name: "noticias"
     label: "Noticias"
     folder: "_posts/noticias"
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
       - {label: "Contenido", name: "body", widget: "markdown"}
 
   - name: "humor"
     label: "Humor"
     folder: "_posts/humor"
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Título", name: "title", widget: "string"}
-      - {label: "Imagen o Gráfico", name: "image", widget: "image", required: false}
-      - {label: "Contenido", name: "body", widget: "markdown"}
+      - {label: "Imagen/Contenido", name: "body", widget: "markdown"}
