@@ -65,51 +65,64 @@
     </footer>
 
     <script>
-        // Función para cargar archivos directamente desde la carpeta local
-        async function cargarArticuloDirecto(rutaArchivo, contenedorId, tituloPredeterminado) {
+        async function cargarSeccionCMS(seccion, contenedorId) {
             const contenedor = document.getElementById(contenedorId);
+            const user = 'lfuentesu';
+            const repo = 'sute-jubilados';
+            const branch = 'master';
+
             try {
-                const res = await fetch(rutaArchivo);
+                // Consulta vía la API pública con manejo de encabezados
+                const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/_posts/${seccion}?ref=${branch}`);
+                
                 if (!res.ok) {
                     contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
                     return;
                 }
-                const textoRaw = await res.text();
-                
-                // Separar metadatos (YAML) del cuerpo del texto
-                const partes = textoRaw.split('---');
-                let cuerpo = textoRaw;
-                let titulo = tituloPredeterminado;
 
-                if (partes.length >= 3) {
-                    const meta = partes[1];
-                    cuerpo = partes.slice(2).join('---');
-                    
-                    const matchTitulo = meta.match(/title:\s*"(.*?)"|title:\s*(.*)/);
-                    if (matchTitulo) {
-                        titulo = matchTitulo[1] || matchTitulo[2];
-                    }
+                const datos = await res.json();
+                const archivosMd = datos.filter(item => item.name.endsWith('.md'));
+
+                if (archivosMd.length === 0) {
+                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+                    return;
                 }
 
                 contenedor.innerHTML = '';
-                const articulo = document.createElement('article');
-                articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
-                contenedor.appendChild(articulo);
 
-            } catch (err) {
+                for (const archivo of archivosMd) {
+                    const resFile = await fetch(archivo.download_url);
+                    const rawText = await resFile.text();
+                    
+                    // Separar metadatos YAML
+                    const partes = rawText.split('---');
+                    let cuerpo = rawText;
+                    let titulo = 'Sin título';
+
+                    if (partes.length >= 3) {
+                        const meta = partes[1];
+                        cuerpo = partes.slice(2).join('---');
+                        const matchTitulo = meta.match(/title:\s*["']?(.*?)["']?$/m);
+                        if (matchTitulo) {
+                            titulo = matchTitulo[1];
+                        }
+                    }
+
+                    const articulo = document.createElement('article');
+                    articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
+                    contenedor.appendChild(articulo);
+                }
+
+            } catch (error) {
                 contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
             }
         }
 
-        // Carga de archivos al iniciar la página
         document.addEventListener('DOMContentLoaded', () => {
-            // Revisa si existe la bienvenida en editorial y la despliega directamente
-            cargarArticuloDirecto('_posts/editorial/bienvenida.md', 'contenido-editorial', 'Bienvenidos');
-            
-            // Las demás secciones muestran el mensaje predeterminado hasta crearles contenido
-            document.getElementById('contenido-cartas').innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-            document.getElementById('contenido-noticias').innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-            document.getElementById('contenido-humor').innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+            cargarSeccionCMS('editorial', 'contenido-editorial');
+            cargarSeccionCMS('cartas', 'contenido-cartas');
+            cargarSeccionCMS('noticias', 'contenido-noticias');
+            cargarSeccionCMS('humor', 'contenido-humor');
         });
     </script>
 </body>
