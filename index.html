@@ -64,62 +64,80 @@
     </footer>
 
     <script>
-        async function cargarSeccion(carpeta, contenedorId) {
+        async function cargarSeccionLocal(seccion, contenedorId) {
             const contenedor = document.getElementById(contenedorId);
-            
+
             try {
-                const res = await fetch(`https://api.github.com/repos/lfuentesu/sute-jubilados/contents/_posts/${carpeta}`);
+                const resIndice = await fetch(`_posts/${seccion}/index.json`);
                 
-                if (!res.ok) {
-                    contenedor.innerHTML = "<p>No hay publicaciones en esta sección aún.</p>";
-                    return;
-                }
-                
-                const archivos = await res.json();
-                const archivosMd = archivos.filter(f => f.name.endsWith(".md"));
-
-                if (archivosMd.length === 0) {
-                    contenedor.innerHTML = "<p>No hay publicaciones en esta sección aún.</p>";
+                if (!resIndice.ok) {
+                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
                     return;
                 }
 
-                contenedor.innerHTML = "";
+                const listaArchivos = await resIndice.json();
 
-                for (const archivo of archivosMd) {
-                    const resContenido = await fetch(archivo.download_url);
-                    const textoRaw = await resContenido.text();
-                    mostrarArticulo(textoRaw, contenedor);
+                if (!Array.isArray(listaArchivos) || listaArchivos.length === 0) {
+                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+                    return;
                 }
-            } catch (err) {
-                contenedor.innerHTML = "<p>No hay publicaciones en esta sección aún.</p>";
+
+                contenedor.innerHTML = '';
+
+                for (const nombreArchivo of listaArchivos) {
+                    const resFile = await fetch(`_posts/${seccion}/${nombreArchivo}`);
+                    if (!resFile.ok) continue;
+
+                    const rawText = await resFile.text();
+                    
+                    // Separación de encabezado YAML y texto
+                    let titulo = 'Publicación';
+                    let cuerpo = rawText;
+
+                    if (rawText.startsWith('---')) {
+                        const lineas = rawText.split('\n');
+                        let enMetadatos = false;
+                        let cuerpoLineas = [];
+
+                        for (let i = 0; i < lineas.length; i++) {
+                            const linea = lineas[i];
+                            if (linea.trim() === '---') {
+                                if (!enMetadatos && i === 0) {
+                                    enMetadatos = true;
+                                    continue;
+                                } else if (enMetadatos) {
+                                    enMetadatos = false;
+                                    continue;
+                                }
+                            }
+
+                            if (enMetadatos) {
+                                if (linea.startsWith('title:')) {
+                                    titulo = linea.replace('title:', '').trim().replace(/^["']|["']$/g, '');
+                                }
+                            } else {
+                                cuerpoLineas.push(linea);
+                            }
+                        }
+                        cuerpo = cuerpoLineas.join('\n');
+                    }
+
+                    const articulo = document.createElement('article');
+                    articulo.style.marginBottom = '20px';
+                    articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
+                    contenedor.appendChild(articulo);
+                }
+
+            } catch (error) {
+                contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
             }
         }
 
-        function mostrarArticulo(textoRaw, contenedor) {
-            const partes = textoRaw.split("---");
-            let cuerpo = textoRaw;
-            let titulo = "Publicación";
-
-            if (partes.length >= 3) {
-                const meta = partes[1];
-                cuerpo = partes.slice(2).join("---");
-                
-                const matchTitulo = meta.match(/title:\s*"(.*?)"|title:\s*(.*)/);
-                if (matchTitulo) {
-                    titulo = matchTitulo[1] || matchTitulo[2];
-                }
-            }
-
-            const articulo = document.createElement("article");
-            articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
-            contenedor.appendChild(articulo);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            cargarSeccion("editorial", "contenido-editorial");
-            cargarSeccion("cartas", "contenido-cartas");
-            cargarSeccion("noticias", "contenido-noticias");
-            cargarSeccion("humor", "contenido-humor");
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarSeccionLocal('editorial', 'contenido-editorial');
+            cargarSeccionLocal('cartas', 'contenido-cartas');
+            cargarSeccionLocal('noticias', 'contenido-noticias');
+            cargarSeccionLocal('humor', 'contenido-humor');
         });
     </script>
 </body>
