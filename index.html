@@ -1,14 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUTE Pensionados - Trabajadores de la Educación</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header>
-        <div class="contenedor">
+        <div class="contenedor header-content">
             <img src="img/logo.png" alt="Logo SUTE" class="logo">
             <h1>SUTE Pensionados</h1>
             <p>Sección Pensionados y Jubilados de la Educación</p>
@@ -22,7 +24,7 @@
                 <li><a href="#humor">Humor</a></li>
                 <li><a href="nuestra-historia.html">Nuestra Historia</a></li>
                 <li><a href="contacto.html">Contactos</a></li>
-                <li><a href="admin/">Acceso CMS</a></li>
+                <li><a href="admin/#/">Acceso CMS</a></li>
             </ul>
         </nav>
     </header>
@@ -30,29 +32,29 @@
     <main class="contenedor">
         <section id="editorial">
             <h2>Editorial</h2>
-            <article id="contenido-editorial">
-                <p>Cargando editorial...</p>
-            </article>
+            <div id="contenido-editorial">
+                <p>Cargando publicaciones...</p>
+            </div>
         </section>
 
         <section id="cartas">
             <h2>Cartas de Opinión</h2>
             <div id="contenido-cartas">
-                <p>Cargando cartas...</p>
+                <p>Cargando publicaciones...</p>
             </div>
         </section>
 
         <section id="noticias">
             <h2>Noticias</h2>
             <div id="contenido-noticias">
-                <p>Cargando noticias...</p>
+                <p>Cargando publicaciones...</p>
             </div>
         </section>
 
         <section id="humor">
             <h2>Humor</h2>
             <div id="contenido-humor">
-                <p>Cargando contenido...</p>
+                <p>Cargando publicaciones...</p>
             </div>
         </section>
     </main>
@@ -60,5 +62,65 @@
     <footer>
         <p>&copy; 2026 SUTE Pensionados. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+        async function cargarSeccion(carpeta, contenedorId) {
+            const contenedor = document.getElementById(contenedorId);
+            
+            try {
+                const res = await fetch(`https://api.github.com/repos/lfuentesu/sute-jubilados/contents/_posts/${carpeta}`);
+                
+                if (!res.ok) {
+                    contenedor.innerHTML = "<p>No hay publicaciones en esta sección aún.</p>";
+                    return;
+                }
+                
+                const archivos = await res.json();
+                const archivosMd = archivos.filter(f => f.name.endsWith(".md"));
+
+                if (archivosMd.length === 0) {
+                    contenedor.innerHTML = "<p>No hay publicaciones en esta sección aún.</p>";
+                    return;
+                }
+
+                contenedor.innerHTML = "";
+
+                for (const archivo of archivosMd) {
+                    const resContenido = await fetch(archivo.download_url);
+                    const textoRaw = await resContenido.text();
+                    mostrarArticulo(textoRaw, contenedor);
+                }
+            } catch (err) {
+                contenedor.innerHTML = "<p>No hay publicaciones en esta sección aún.</p>";
+            }
+        }
+
+        function mostrarArticulo(textoRaw, contenedor) {
+            const partes = textoRaw.split("---");
+            let cuerpo = textoRaw;
+            let titulo = "Publicación";
+
+            if (partes.length >= 3) {
+                const meta = partes[1];
+                cuerpo = partes.slice(2).join("---");
+                
+                const matchTitulo = meta.match(/title:\s*"(.*?)"|title:\s*(.*)/);
+                if (matchTitulo) {
+                    titulo = matchTitulo[1] || matchTitulo[2];
+                }
+            }
+
+            const articulo = document.createElement("article");
+            articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
+            contenedor.appendChild(articulo);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarSeccion("editorial", "contenido-editorial");
+            cargarSeccion("cartas", "contenido-cartas");
+            cargarSeccion("noticias", "contenido-noticias");
+            cargarSeccion("humor", "contenido-humor");
+        });
+    </script>
 </body>
 </html>
