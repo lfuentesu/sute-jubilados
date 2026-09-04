@@ -1,12 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel de Administración - SUTE Pensionados</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUTE Pensionados - Trabajadores de la Educación</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- Librería para procesar el formato Markdown de Decap CMS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <header>
+        <div class="contenedor header-content">
+            <img src="img/logo.png" alt="Logo SUTE" class="logo">
+            <h1>SUTE Pensionados</h1>
+            <p>Sección Pensionados y Jubilados de la Educación</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#editorial">Editorial</a></li>
+                <li><a href="#cartas">Cartas de Opinión</a></li>
+                <li><a href="#noticias">Noticias</a></li>
+                <li><a href="#humor">Humor</a></li>
+                <li><a href="nuestra-historia.html">Nuestra Historia</a></li>
+                <li><a href="contacto.html">Contactos</a></li>
+                <li><a href="admin/#/">Acceso CMS</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section id="editorial">
+            <h2>Editorial</h2>
+            <div id="contenido-editorial">
+                <p>Cargando contenido...</p>
+            </div>
+        </section>
+
+        <section id="cartas">
+            <h2>Cartas de Opinión</h2>
+            <div id="contenido-cartas">
+                <p>Cargando contenido...</p>
+            </div>
+        </section>
+
+        <section id="noticias">
+            <h2>Noticias</h2>
+            <div id="contenido-noticias">
+                <p>Cargando contenido...</p>
+            </div>
+        </section>
+
+        <section id="humor">
+            <h2>Humor</h2>
+            <div id="contenido-humor">
+                <p>Cargando contenido...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SUTE Pensionados. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        async function cargarPublicaciones(seccion, contenedorId) {
+            const contenedor = document.getElementById(contenedorId);
+            try {
+                // Consultar los archivos subidos en la carpeta correspondiente en GitHub
+                const respuesta = await fetch(`https://api.github.com/repos/lfuentesu/sute-jubilados/contents/_posts/${seccion}`);
+                
+                if (!respuesta.ok) {
+                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+                    return;
+                }
+                
+                const archivos = await respuesta.json();
+                
+                // Filtrar solo los archivos .md generados por el CMS
+                const archivosMd = archivos.filter(f => f.name.endsWith('.md'));
+
+                if (archivosMd.length === 0) {
+                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+                    return;
+                }
+
+                contenedor.innerHTML = ''; // Limpiar el texto "Cargando..."
+
+                for (const archivo of archivosMd) {
+                    const resContenido = await fetch(archivo.download_url);
+                    const textoRaw = await resContenido.text();
+                    
+                    // Separar los metadatos del CMS (encabezado YAML) del cuerpo del texto
+                    const partes = textoRaw.split('---');
+                    let cuerpo = textoRaw;
+                    let titulo = 'Publicación';
+
+                    if (partes.length >= 3) {
+                        const meta = partes[1];
+                        cuerpo = partes.slice(2).join('---');
+                        
+                        // Extraer el título si existe en los metadatos
+                        const matchTitulo = meta.match(/title:\s*"(.*?)"|title:\s*(.*)/);
+                        if (matchTitulo) {
+                            titulo = matchTitulo[1] || matchTitulo[2];
+                        }
+                    }
+
+                    const articulo = document.createElement('article');
+                    articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
+                    contenedor.appendChild(articulo);
+                }
+            } catch (error) {
+                contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarPublicaciones('editorial', 'contenido-editorial');
+            cargarPublicaciones('cartas', 'contenido-cartas');
+            cargarPublicaciones('noticias', 'contenido-noticias');
+            cargarPublicaciones('humor', 'contenido-humor');
+        });
+    </script>
 </body>
 </html>
