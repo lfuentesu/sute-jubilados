@@ -6,7 +6,6 @@
     <title>SUTE Pensionados - Trabajadores de la Educación</title>
     <link rel="stylesheet" href="css/estilos.css">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <!-- Librería para procesar el formato Markdown de Decap CMS -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
@@ -65,33 +64,31 @@
     </footer>
 
     <script>
-        async function cargarSeccionCMS(seccion, contenedorId) {
+        async function cargarSeccionLocal(seccion, contenedorId) {
             const contenedor = document.getElementById(contenedorId);
-            const user = 'lfuentesu';
-            const repo = 'sute-jubilados';
-            const branch = 'master';
 
             try {
-                // Consulta vía la API pública con manejo de encabezados
-                const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/_posts/${seccion}?ref=${branch}`);
+                // Obtener la lista estática de archivos desde el manifiesto index.json
+                const resIndice = await fetch(`_posts/${seccion}/index.json`);
                 
-                if (!res.ok) {
+                if (!resIndice.ok) {
                     contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
                     return;
                 }
 
-                const datos = await res.json();
-                const archivosMd = datos.filter(item => item.name.endsWith('.md'));
+                const listaArchivos = await resIndice.json();
 
-                if (archivosMd.length === 0) {
+                if (!Array.isArray(listaArchivos) || listaArchivos.length === 0) {
                     contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
                     return;
                 }
 
                 contenedor.innerHTML = '';
 
-                for (const archivo of archivosMd) {
-                    const resFile = await fetch(archivo.download_url);
+                for (const nombreArchivo of listaArchivos) {
+                    const resFile = await fetch(`_posts/${seccion}/${nombreArchivo}`);
+                    if (!resFile.ok) continue;
+
                     const rawText = await resFile.text();
                     
                     // Separar metadatos YAML
@@ -119,10 +116,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            cargarSeccionCMS('editorial', 'contenido-editorial');
-            cargarSeccionCMS('cartas', 'contenido-cartas');
-            cargarSeccionCMS('noticias', 'contenido-noticias');
-            cargarSeccionCMS('humor', 'contenido-humor');
+            cargarSeccionLocal('editorial', 'contenido-editorial');
+            cargarSeccionLocal('cartas', 'contenido-cartas');
+            cargarSeccionLocal('noticias', 'contenido-noticias');
+            cargarSeccionLocal('humor', 'contenido-humor');
         });
     </script>
 </body>
