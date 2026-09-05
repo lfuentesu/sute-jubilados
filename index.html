@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUTE Pensionados - Trabajadores de la Educación</title>
+    <!-- Se agrega ?v=2 para obligar al navegador a cargar los nuevos estilos CSS -->
     <link rel="stylesheet" href="css/estilos.css?v=2">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header>
@@ -33,28 +33,28 @@
         <section id="editorial">
             <h2>Editorial</h2>
             <div id="contenido-editorial">
-                <p>Cargando publicaciones...</p>
+                <p>Cargando contenido...</p>
             </div>
         </section>
 
         <section id="cartas">
             <h2>Cartas de Opinión</h2>
             <div id="contenido-cartas">
-                <p>Cargando publicaciones...</p>
+                <p>Cargando contenido...</p>
             </div>
         </section>
 
         <section id="noticias">
             <h2>Noticias</h2>
             <div id="contenido-noticias">
-                <p>Cargando publicaciones...</p>
+                <p>Cargando contenido...</p>
             </div>
         </section>
 
         <section id="humor">
             <h2>Humor</h2>
             <div id="contenido-humor">
-                <p>Cargando publicaciones...</p>
+                <p>Cargando contenido...</p>
             </div>
         </section>
     </main>
@@ -66,66 +66,31 @@
     <script>
         async function cargarSeccionLocal(seccion, contenedorId) {
             const contenedor = document.getElementById(contenedorId);
-
             try {
-                const resIndice = await fetch(`_posts/${seccion}/index.json`);
+                // Lee directamente los archivos locales guardados en la carpeta del servidor Netlify
+                const respuesta = await fetch(`_posts/${seccion}/index.json`);
                 
-                if (!resIndice.ok) {
+                if (!respuesta.ok) {
                     contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
                     return;
                 }
-
-                const listaArchivos = await resIndice.json();
-
-                if (!Array.isArray(listaArchivos) || listaArchivos.length === 0) {
-                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-                    return;
-                }
-
+                
+                const articulos = await respuesta.json();
                 contenedor.innerHTML = '';
-
-                for (const nombreArchivo of listaArchivos) {
-                    const resFile = await fetch(`_posts/${seccion}/${nombreArchivo}`);
-                    if (!resFile.ok) continue;
-
-                    const rawText = await resFile.text();
-                    
-                    let titulo = 'Publicación';
-                    let cuerpo = rawText;
-
-                    if (rawText.startsWith('---')) {
-                        const lineas = rawText.split('\n');
-                        let enMetadatos = false;
-                        let cuerpoLineas = [];
-
-                        for (let i = 0; i < lineas.length; i++) {
-                            const linea = lineas[i];
-                            if (linea.trim() === '---') {
-                                if (!enMetadatos && i === 0) {
-                                    enMetadatos = true;
-                                    continue;
-                                } else if (enMetadatos) {
-                                    enMetadatos = false;
-                                    continue;
-                                }
-                            }
-
-                            if (enMetadatos) {
-                                if (linea.startsWith('title:')) {
-                                    titulo = linea.replace('title:', '').trim().replace(/^["']|["']$/g, '');
-                                }
-                            } else {
-                                cuerpoLineas.push(linea);
-                            }
-                        }
-                        cuerpo = cuerpoLineas.join('\n');
-                    }
-
-                    const articulo = document.createElement('article');
-                    articulo.style.marginBottom = '20px';
-                    articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
-                    contenedor.appendChild(articulo);
+                
+                if (!articulos || articulos.length === 0) {
+                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
+                    return;
                 }
+
+                articulos.forEach(post => {
+                    const articulo = document.createElement('article');
+                    articulo.innerHTML = `
+                        <h3>${post.title || 'Sin título'}</h3>
+                        <p>${post.body || ''}</p>
+                    `;
+                    contenedor.appendChild(articulo);
+                });
 
             } catch (error) {
                 contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
