@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUTE Pensionados - Trabajadores de la Educación</title>
-    <!-- Se agrega ?v=2 para obligar al navegador a cargar los nuevos estilos CSS -->
-    <link rel="stylesheet" href="css/estilos.css?v=2">
+    <link rel="stylesheet" href="css/estilos.css?v=3">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
@@ -67,7 +66,6 @@
         async function cargarSeccionLocal(seccion, contenedorId) {
             const contenedor = document.getElementById(contenedorId);
             try {
-                // Lee directamente los archivos locales guardados en la carpeta del servidor Netlify
                 const respuesta = await fetch(`_posts/${seccion}/index.json`);
                 
                 if (!respuesta.ok) {
