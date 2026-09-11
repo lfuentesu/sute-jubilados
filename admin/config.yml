@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: lfuentesu/sute-jubilados
   branch: main
 
 media_folder: "img"
