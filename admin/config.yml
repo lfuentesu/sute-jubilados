@@ -45,3 +45,12 @@ collections:
     fields:
       - {label: "Título", name: "title", widget: "string"}
       - {label: "Imagen/Contenido", name: "body", widget: "markdown"}
+      - name: "paginas_amigas"
+    label: "Páginas Amigas"
+    folder: "_paginas_amigas"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nombre del Sitio", name: "title", widget: "string" }
+      - { label: "Enlace Web (URL)", name: "url", widget: "string" }
+      - { label: "Descripción o Nota", name: "description", widget: "text", required: false }
