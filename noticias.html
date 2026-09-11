@@ -2,23 +2,77 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Noticias y Comunicados | SUTE-JUBILADOS</title>
   <style>
-    body { font-family: sans-serif; margin: 0; background: #f4f6f9; color: #333; }
-    header { background: #003366; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-    header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color: #333; }
+    header { background-color: #003366; color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    header h2 { margin: 0; font-size: 1.5rem; }
+    header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 5px; transition: background 0.2s; }
+    header a:hover { background: rgba(255,255,255,0.3); }
     main { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-    h1 { color: #003366; }
+    .noticia-card { background: white; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 5px solid #003366; }
+    .noticia-title { margin: 0 0 10px 0; color: #003366; font-size: 1.4rem; }
+    .noticia-fecha { font-size: 0.85rem; color: #888; margin-bottom: 15px; }
+    .noticia-body { font-size: 1rem; line-height: 1.6; color: #444; }
+    .loading { text-align: center; color: #666; font-style: italic; font-size: 1.1rem; padding: 40px; }
   </style>
 </head>
 <body>
+
   <header>
     <h2>📰 Noticias y Comunicados</h2>
     <a href="index.html">⬅️ Volver al Inicio</a>
   </header>
+
   <main>
-    <h1>Últimas Publicaciones</h1>
-    <p>Sección en actualización. Próximamente se listarán aquí los comunicados creados desde el panel de administración.</p>
+    <div id="contenedor-noticias">
+      <div class="loading">Cargando publicaciones...</div>
+    </div>
   </main>
+
+  <script>
+    async function cargarNoticias() {
+      const contenedor = document.getElementById('contenedor-noticias');
+      try {
+        const respuesta = await fetch('https://api.github.com/repos/lfuentesu/sute-jubilados/contents/_noticias');
+        if (!respuesta.ok) throw new Error();
+        const archivos = await respuesta.json();
+        
+        if (archivos.length === 0) {
+          contenedor.innerHTML = '<p class="loading">No hay noticias publicadas aún.</p>';
+          return;
+        }
+
+        contenedor.innerHTML = '';
+        for (const archivo of archivos) {
+          if (archivo.name.endsWith('.md')) {
+            const resArchivo = await fetch(archivo.download_url);
+            const texto = await resArchivo.text();
+            
+            const tituloMatch = texto.match(/title:\s*["']?(.*?)["']?$/m);
+            const fechaMatch = texto.match(/date:\s*["']?(.*?)["']?$/m);
+            const cuerpo = texto.replace(/^---[\s\S]*?---/, '').trim();
+
+            const titulo = tituloMatch ? tituloMatch[1] : archivo.name;
+            const fecha = fechaMatch ? fechaMatch[1] : '';
+
+            const card = document.createElement('div');
+            card.className = 'noticia-card';
+            card.innerHTML = `
+              <h3 class="noticia-title">${titulo}</h3>
+              ${fecha ? `<div class="noticia-fecha">📅 ${fecha}</div>` : ''}
+              <div class="noticia-body">${cuerpo.replace(/\n/g, '<br>')}</div>
+            `;
+            contenedor.appendChild(card);
+          }
+        }
+      } catch (error) {
+        contenedor.innerHTML = '<p class="loading">Próximamente se listarán aquí los comunicados oficiales.</p>';
+      }
+    }
+    cargarNoticias();
+  </script>
+
 </body>
 </html>
