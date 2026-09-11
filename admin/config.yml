@@ -2,6 +2,7 @@ backend:
   name: github
   repo: lfuentesu/sute-jubilados
   branch: main
+  auth_type: implicit
 
 media_folder: "img"
 public_folder: "/img"
