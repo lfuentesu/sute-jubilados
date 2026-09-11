@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Publicación | SUTE Pensionados</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; color: #333; }
+    header { background-color: #003366; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+    header h2 { margin: 0; font-size: 1.4rem; }
+    header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; }
+    main { max-width: 650px; margin: 30px auto; padding: 0 20px; }
+    .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 25px; }
+    h3 { margin-top: 0; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; }
+    label { display: block; font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #444; }
+    input[type="text"], input[type="password"], input[type="date"], textarea, select {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    textarea { height: 120px; resize: vertical; }
+    button { background-color: #28a745; color: white; font-weight: bold; font-size: 1rem; border: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 100%; transition: background 0.2s; }
+    button:hover { background-color: #218838; }
+    #status { margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; text-align: center; display: none; }
+    .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>📝 Panel de Administración Directo</h2>
+    <a href="index.html">⬅️ Volver al Sitio</a>
+  </header>
+
+  <main>
+    <!-- Clave Personal de Acceso -->
+    <div class="card">
+      <h3>🔑 Clave de Acceso (GitHub Token)</h3>
+      <label for="token">Ingresa tu Token de GitHub:</label>
+      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      <small style="color: #666; display: block; margin-top: 5px;">Esta clave autoriza a publicar directamente en la web.</small>
+    </div>
+
+    <!-- Formulario de Publicación -->
+    <div class="card">
+      <h3>📢 Crear Nueva Publicación</h3>
+      
+      <label for="tipo">¿Qué deseas publicar?</label>
+      <select id="tipo" onchange="cambiarTipo()">
+        <option value="noticia">📰 Noticia o Comunicado</option>
+        <option value="amiga">🔗 Página Amiga / Enlace</option>
+      </select>
+
+      <label for="titulo" id="lbl-titulo">Título del Comunicado:</label>
+      <input type="text" id="titulo" placeholder="Ej: Convocatoria a Asamblea General">
+
+      <div id="sec-fecha">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha">
+      </div>
+
+      <div id="sec-url" style="display: none;">
+        <label for="url">Dirección Web (URL):</label>
+        <input type="text" id="url" placeholder="https://www.colegiodeprofesores.cl">
+      </div>
+
+      <label for="contenido" id="lbl-contenido">Cuerpo o Texto de la Noticia:</label>
+      <textarea id="contenido" placeholder="Escribe aquí el texto del comunicado..."></textarea>
+
+      <button onclick="publicar()">🚀 Publicar en el Sitio Web</button>
+      <div id="status"></div>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('fecha').valueAsDate = new Date();
+
+    function cambiarTipo() {
+      const tipo = document.getElementById('tipo').value;
+      if (tipo === 'noticia') {
+        document.getElementById('lbl-titulo').innerText = 'Título del Comunicado:';
+        document.getElementById('sec-fecha').style.display = 'block';
+        document.getElementById('sec-url').style.display = 'none';
+        document.getElementById('lbl-contenido').innerText = 'Cuerpo o Texto de la Noticia:';
+      } else {
+        document.getElementById('lbl-titulo').innerText = 'Nombre de la Organización o Sitio:';
+        document.getElementById('sec-fecha').style.display = 'none';
+        document.getElementById('sec-url').style.display = 'block';
+        document.getElementById('lbl-contenido').innerText = 'Descripción o Nota breve:';
+      }
+    }
+
+    async function publicar() {
+      const token = document.getElementById('token').value.trim();
+      const tipo = document.getElementById('tipo').value;
+      const titulo = document.getElementById('titulo').value.trim();
+      const status = document.getElementById('status');
+
+      if (!token) { alert('Por favor ingresa tu Token de GitHub.'); return; }
+      if (!titulo) { alert('Por favor ingresa un título.'); return; }
+
+      status.style.display = 'block';
+      status.className = '';
+      status.innerText = '⏳ Publicando contenido en el sitio web...';
+
+      const repo = 'lfuentesu/sute-jubilados';
+      const slug = titulo.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+      let ruta = '';
+      let contenidoMd = '';
+
+      if (tipo === 'noticia') {
+        const fecha = document.getElementById('fecha').value;
+        const texto = document.getElementById('contenido').value;
+        ruta = `_noticias/${fecha}-${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${texto}`;
+      } else {
+        const url = document.getElementById('url').value.trim();
+        const desc = document.getElementById('contenido').value.trim();
+        ruta = `_paginas_amigas/${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\nurl: "${url}"\ndescription: "${desc}"\n---`;
+      }
+
+      const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoMd)));
+
+      try {
+        const respuesta = await fetch(`https://api.github.com/repos/${repo}/contents/${ruta}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Nueva publicación desde el panel: ${titulo}`,
+            content: contenidoBase64
+          })
+        });
+
+        if (respuesta.ok) {
+          status.className = 'success';
+          status.innerText = '✅ ¡Publicado con éxito! Se reflejará en la web en unos 15 segundos.';
+          document.getElementById('titulo').value = '';
+          document.getElementById('contenido').value = '';
+        } else {
+          const errData = await respuesta.json();
+          throw new Error(errData.message || 'Error al guardar');
+        }
+      } catch (err) {
+        status.className = 'error';
+        status.innerText = '❌ Error al publicar: ' + err.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
