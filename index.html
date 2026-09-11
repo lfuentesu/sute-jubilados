@@ -1,106 +1,201 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUTE Pensionados - Trabajadores de la Educación</title>
-    <link rel="stylesheet" href="css/estilos.css?v=3">
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUTE-JUBILADOS | Portada Principal</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    /* Estilos base para la portada */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    /* Barra de aviso desplazable */
+    .ticker-wrap {
+      width: 100%;
+      background-color: #003366;
+      color: #ffffff;
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      font-weight: 500;
+    }
+    .ticker {
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker 25s linear infinite;
+    }
+    @keyframes ticker {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+    /* Encabezado */
+    header {
+      background-color: #ffffff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #003366;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .logo-container img {
+      max-height: 70px;
+      border-radius: 6px;
+    }
+    .title-container h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #003366;
+    }
+    .title-container p {
+      margin: 2px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .admin-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    .admin-btn:hover {
+      background-color: #218838;
+    }
+    /* Seccion Central de Saludo */
+    .hero {
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero h2 {
+      color: #003366;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.5;
+    }
+    /* Rejilla de Secciones en Pestañas Independientes */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 30px auto 60px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-decoration: none;
+      color: #333;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-top: 4px solid #003366;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+    .card h3 {
+      margin: 0 0 10px 0;
+      color: #003366;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #003366;
+      color: white;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="contenedor header-content">
-            <img src="img/logo.png" alt="Logo SUTE" class="logo">
-            <h1>SUTE Pensionados</h1>
-            <p>Sección Pensionados y Jubilados de la Educación</p>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="#editorial">Editorial</a></li>
-                <li><a href="#cartas">Cartas de Opinión</a></li>
-                <li><a href="#noticias">Noticias</a></li>
-                <li><a href="#humor">Humor</a></li>
-                <li><a href="nuestra-historia.html">Nuestra Historia</a></li>
-                <li><a href="contacto.html">Contactos</a></li>
-                <li><a href="admin/#/">Acceso CMS</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main class="contenedor">
-        <section id="editorial">
-            <h2>Editorial</h2>
-            <div id="contenido-editorial">
-                <p>Cargando contenido...</p>
-            </div>
-        </section>
+  <!-- BARRA DE MENSAJES DESPLAZABLE -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      📢 <strong>Aviso Importante:</strong> Bienvenidos a la nueva plataforma digital de SUTE-JUBILADOS. Conoce nuestras actividades, comunicados e información relevante para todos los afiliados.
+    </div>
+  </div>
 
-        <section id="cartas">
-            <h2>Cartas de Opinión</h2>
-            <div id="contenido-cartas">
-                <p>Cargando contenido...</p>
-            </div>
-        </section>
+  <!-- ENCABEZADO CON LOGO Y BOTÓN DE ADMIN -->
+  <header>
+    <div class="logo-container">
+      <img src="img/logo.jpeg" alt="Logo SUTE">
+      <div class="title-container">
+        <h1>SUTE-JUBILADOS</h1>
+        <p>Sindicato Independiente de Trabajadores de la Educación con Daño Previsional</p>
+      </div>
+    </div>
+    <a href="admin/index.html" class="admin-btn">🔐 Acceso Admin</a>
+  </header>
 
-        <section id="noticias">
-            <h2>Noticias</h2>
-            <div id="contenido-noticias">
-                <p>Cargando contenido...</p>
-            </div>
-        </section>
+  <!-- MENSAJE DE BIENVENIDA -->
+  <section class="hero">
+    <h2>Bienvenidos a nuestro Portal Institucional</h2>
+    <p>Selecciona una de las secciones a continuación para acceder a la información, noticias, documentos y enlaces de interés.</p>
+  </section>
 
-        <section id="humor">
-            <h2>Humor</h2>
-            <div id="contenido-humor">
-                <p>Cargando contenido...</p>
-            </div>
-        </section>
-    </main>
+  <!-- TARJETAS NAVEGABLES A PÁGINAS INDEPENDIENTES -->
+  <div class="grid-container">
+    <a href="noticias.html" class="card">
+      <span class="card-icon">📰</span>
+      <h3>Noticias</h3>
+      <p>Comunicados, novedades y publicaciones actualizadas.</p>
+    </a>
 
-    <footer>
-        <p>&copy; 2026 SUTE Pensionados. Todos los derechos reservados.</p>
-    </footer>
+    <a href="documentos.html" class="card">
+      <span class="card-icon">📑</span>
+      <h3>Documentos</h3>
+      <p>Estatutos, actas y archivos descargables.</p>
+    </a>
 
-    <script>
-        async function cargarSeccionLocal(seccion, contenedorId) {
-            const contenedor = document.getElementById(contenedorId);
-            try {
-                const respuesta = await fetch(`_posts/${seccion}/index.json`);
-                
-                if (!respuesta.ok) {
-                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-                    return;
-                }
-                
-                const articulos = await respuesta.json();
-                contenedor.innerHTML = '';
-                
-                if (!articulos || articulos.length === 0) {
-                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-                    return;
-                }
+    <a href="paginas-amigas.html" class="card">
+      <span class="card-icon">🔗</span>
+      <h3>Páginas Amigas</h3>
+      <p>Organizaciones e instituciones aliadas.</p>
+    </a>
 
-                articulos.forEach(post => {
-                    const articulo = document.createElement('article');
-                    articulo.innerHTML = `
-                        <h3>${post.title || 'Sin título'}</h3>
-                        <p>${post.body || ''}</p>
-                    `;
-                    contenedor.appendChild(articulo);
-                });
+    <a href="contacto.html" class="card">
+      <span class="card-icon">📞</span>
+      <h3>Contacto</h3>
+      <p>Formulario de consultas y datos institucionales.</p>
+    </a>
+  </div>
 
-            } catch (error) {
-                contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-            }
-        }
+  <footer>
+    <p>&copy; SUTE-JUBILADOS. Todos los derechos reservados.</p>
+  </footer>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarSeccionLocal('editorial', 'contenido-editorial');
-            cargarSeccionLocal('cartas', 'contenido-cartas');
-            cargarSeccionLocal('noticias', 'contenido-noticias');
-            cargarSeccionLocal('humor', 'contenido-humor');
-        });
-    </script>
 </body>
 </html>
