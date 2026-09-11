@@ -1,126 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUTE Pensionados - Trabajadores de la Educación</title>
-    <link rel="stylesheet" href="css/estilos.css">
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración | SUTE-JUBILADOS</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-    <header>
-        <div class="contenedor header-content">
-            <img src="img/logo.png" alt="Logo SUTE" class="logo">
-            <h1>SUTE Pensionados</h1>
-            <p>Sección Pensionados y Jubilados de la Educación</p>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="#editorial">Editorial</a></li>
-                <li><a href="#cartas">Cartas de Opinión</a></li>
-                <li><a href="#noticias">Noticias</a></li>
-                <li><a href="#humor">Humor</a></li>
-                <li><a href="nuestra-historia.html">Nuestra Historia</a></li>
-                <li><a href="contacto.html">Contactos</a></li>
-                <li><a href="admin/#/">Acceso CMS</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="contenedor">
-        <section id="editorial">
-            <h2>Editorial</h2>
-            <div id="contenido-editorial">
-                <p>Cargando publicaciones...</p>
-            </div>
-        </section>
-
-        <section id="cartas">
-            <h2>Cartas de Opinión</h2>
-            <div id="contenido-cartas">
-                <p>Cargando publicaciones...</p>
-            </div>
-        </section>
-
-        <section id="noticias">
-            <h2>Noticias</h2>
-            <div id="contenido-noticias">
-                <p>Cargando publicaciones...</p>
-            </div>
-        </section>
-
-        <section id="humor">
-            <h2>Humor</h2>
-            <div id="contenido-humor">
-                <p>Cargando publicaciones...</p>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 SUTE Pensionados. Todos los derechos reservados.</p>
-    </footer>
-
-    <script>
-        async function cargarSeccionLocal(seccion, contenedorId) {
-            const contenedor = document.getElementById(contenedorId);
-
-            try {
-                // Obtener la lista estática de archivos desde el manifiesto index.json
-                const resIndice = await fetch(`_posts/${seccion}/index.json`);
-                
-                if (!resIndice.ok) {
-                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-                    return;
-                }
-
-                const listaArchivos = await resIndice.json();
-
-                if (!Array.isArray(listaArchivos) || listaArchivos.length === 0) {
-                    contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-                    return;
-                }
-
-                contenedor.innerHTML = '';
-
-                for (const nombreArchivo of listaArchivos) {
-                    const resFile = await fetch(`_posts/${seccion}/${nombreArchivo}`);
-                    if (!resFile.ok) continue;
-
-                    const rawText = await resFile.text();
-                    
-                    // Separar metadatos YAML
-                    const partes = rawText.split('---');
-                    let cuerpo = rawText;
-                    let titulo = 'Sin título';
-
-                    if (partes.length >= 3) {
-                        const meta = partes[1];
-                        cuerpo = partes.slice(2).join('---');
-                        const matchTitulo = meta.match(/title:\s*["']?(.*?)["']?$/m);
-                        if (matchTitulo) {
-                            titulo = matchTitulo[1];
-                        }
-                    }
-
-                    const articulo = document.createElement('article');
-                    articulo.innerHTML = `<h3>${titulo}</h3><div>${marked.parse(cuerpo)}</div>`;
-                    contenedor.appendChild(articulo);
-                }
-
-            } catch (error) {
-                contenedor.innerHTML = '<p>No hay publicaciones en esta sección aún.</p>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarSeccionLocal('editorial', 'contenido-editorial');
-            cargarSeccionLocal('cartas', 'contenido-cartas');
-            cargarSeccionLocal('noticias', 'contenido-noticias');
-            cargarSeccionLocal('humor', 'contenido-humor');
-        });
-    </script>
+  <!-- Carga del editor de Decap CMS -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
