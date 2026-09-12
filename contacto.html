@@ -1,12 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Contactos - SUTE Pensionados</title>
-    <link rel="stylesheet" href="css/estilos.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto y Opiniones | SUTE Pensionados</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
+    header { background-color: #003366; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+    header h2 { margin: 0; font-size: 1.4rem; }
+    header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; }
+    main { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+    .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 25px; }
+    h3 { margin-top: 0; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; }
+    label { display: block; font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #444; }
+    input[type="text"], input[type="email"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 0.95rem; }
+    textarea { height: 120px; resize: vertical; }
+    button { background-color: #003366; color: white; font-weight: bold; font-size: 1rem; border: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 100%; transition: background 0.2s; }
+    button:hover { background-color: #002244; }
+    #status { margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; text-align: center; display: none; }
+    .success { background-color: #d4edda; color: #155724; }
+    .error { background-color: #f8d7da; color: #721c24; }
+    .carta-item { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 20px; border-left: 5px solid #28a745; }
+    .carta-item h4 { margin: 0 0 5px 0; color: #003366; }
+    .carta-autor { font-size: 0.85rem; color: #777; margin-bottom: 12px; }
+    .carta-img { max-width: 100%; height: auto; border-radius: 5px; margin-top: 10px; display: block; }
+  </style>
 </head>
 <body>
-    <header><h1>Contacto</h1><a href="index.html">← Volver al inicio</a></header>
-    <main><p>Formulario o información de contacto...</p></main>
+
+  <header>
+    <h2>✉️ Contacto, Cartas y Opiniones</h2>
+    <a href="index.html">⬅️ Volver al Inicio</a>
+  </header>
+
+  <main>
+    <!-- Formulario de envío -->
+    <div class="card">
+      <h3>✍️ Envíanos tu Consulta, Carta u Opinión</h3>
+      <p style="font-size: 0.9rem; color: #666;">Completa este formulario para comunicarte con la directiva o enviar tu opinión para publicación.</p>
+
+      <label for="nombre">Tu Nombre Completo:</label>
+      <input type="text" id="nombre" placeholder="Ej: Juan Pérez">
+
+      <label for="email">Tu Correo Electrónico:</label>
+      <input type="email" id="email" placeholder="ejemplo@correo.com">
+
+      <label for="titulo">Título o Asunto:</label>
+      <input type="text" id="titulo" placeholder="Ej: Consulta sobre convenios / Opinión">
+
+      <label for="mensaje">Tu Mensaje u Opinión:</label>
+      <textarea id="mensaje" placeholder="Escribe aquí tu mensaje..."></textarea>
+
+      <label for="imagen">Enlace a Fotografía o Imagen (Opcional):</label>
+      <input type="text" id="imagen" placeholder="https://ejemplo.com/mi-foto.jpg">
+
+      <button onclick="enviarCarta()">📩 Enviar Mensaje</button>
+      <div id="status"></div>
+    </div>
+
+    <!-- Muestra de cartas aprobadas -->
+    <div class="card">
+      <h3>📜 Opiniones Publicadas</h3>
+      <div id="lista-cartas"><p style="color: #666;">Cargando opiniones...</p></div>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbynlrfh0Z8KBwOuU260thF865CUxB02qNZ815sfk8WDKsiZUuVCsIaZY-KmlXaxEIy-pQ/exec";
+
+    async function enviarCarta() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const titulo = document.getElementById('titulo').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+      const imagen = document.getElementById('imagen').value.trim();
+      const status = document.getElementById('status');
+
+      if (!nombre || !mensaje) { alert('Por favor completa tu nombre y el mensaje.'); return; }
+
+      status.style.display = 'block';
+      status.className = '';
+      status.innerText = '⏳ Enviando tu mensaje a la planilla...';
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre, email, titulo, mensaje, imagen })
+        });
+
+        status.className = 'success';
+        status.innerText = '✅ ¡Mensaje enviado con éxito! Ha quedado registrado en nuestra planilla para su revisión.';
+        document.getElementById('nombre').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('titulo').value = '';
+        document.getElementById('mensaje').value = '';
+        document.getElementById('imagen').value = '';
+      } catch (err) {
+        status.className = 'error';
+        status.innerText = '❌ Error al enviar el mensaje. Inténtalo nuevamente.';
+      }
+    }
+
+    async function cargarCartasAprobadas() {
+      const contenedor = document.getElementById('lista-cartas');
+      try {
+        const res = await fetch(API_URL);
+        const datos = await res.json();
+        const aprobadas = datos.filter(item => item.estado === 'Aprobado');
+
+        if (aprobadas.length === 0) {
+          contenedor.innerHTML = '<p style="color:#777;">Aún no hay opiniones aprobadas publicadas.</p>';
+          return;
+        }
+
+        contenedor.innerHTML = '';
+        aprobadas.forEach(c => {
+          const div = document.createElement('div');
+          div.className = 'carta-item';
+          div.innerHTML = `
+            <h4>${c.titulo || 'Opinión de un afiliado'}</h4>
+            <div class="carta-autor">Por: <strong>${c.nombre}</strong> - ${c.fecha}</div>
+            <p>${c.mensaje.replace(/\n/g, '<br>')}</p>
+            ${c.imagen ? `<img src="${c.imagen}" class="carta-img" alt="Foto adjunta">` : ''}
+          `;
+          contenedor.appendChild(div);
+        });
+      } catch (e) {
+        contenedor.innerHTML = '<p style="color:#777;">No se pudieron cargar las opiniones en este momento.</p>';
+      }
+    }
+
+    cargarCartasAprobadas();
+  </script>
+
 </body>
 </html>
