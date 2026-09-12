@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contacto y Opiniones | SUTE Pensionados</title>
+  <title>Panel de Administración General | SUTE Pensionados</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; color: #333; }
     header { background-color: #003366; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
     header h2 { margin: 0; font-size: 1.4rem; }
     header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; }
@@ -13,126 +13,186 @@
     .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 25px; }
     h3 { margin-top: 0; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; }
     label { display: block; font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #444; }
-    input[type="text"], input[type="email"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 0.95rem; }
-    textarea { height: 120px; resize: vertical; }
-    button { background-color: #003366; color: white; font-weight: bold; font-size: 1rem; border: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 100%; transition: background 0.2s; }
-    button:hover { background-color: #002244; }
+    input[type="text"], input[type="password"], input[type="date"], textarea, select {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    textarea { height: 100px; resize: vertical; }
+    button { background-color: #28a745; color: white; font-weight: bold; font-size: 1rem; border: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 100%; }
     #status { margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; text-align: center; display: none; }
     .success { background-color: #d4edda; color: #155724; }
     .error { background-color: #f8d7da; color: #721c24; }
-    .carta-item { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 20px; border-left: 5px solid #28a745; }
-    .carta-item h4 { margin: 0 0 5px 0; color: #003366; }
-    .carta-autor { font-size: 0.85rem; color: #777; margin-bottom: 12px; }
-    .carta-img { max-width: 100%; height: auto; border-radius: 5px; margin-top: 10px; display: block; }
+    .item-carta { background: #f8f9fa; border-left: 4px solid #003366; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
   </style>
 </head>
 <body>
 
   <header>
-    <h2>✉️ Contacto, Cartas y Opiniones</h2>
-    <a href="index.html">⬅️ Volver al Inicio</a>
+    <h2>⚙️ Panel de Administración General</h2>
+    <a href="index.html">⬅️ Volver al Sitio</a>
   </header>
 
   <main>
-    <!-- Formulario de envío -->
+    <!-- Clave Personal de Acceso -->
     <div class="card">
-      <h3>✍️ Envíanos tu Consulta, Carta u Opinión</h3>
-      <p style="font-size: 0.9rem; color: #666;">Completa este formulario para comunicarte con la directiva o enviar tu opinión para publicación.</p>
+      <h3>🔑 Clave de Acceso (GitHub Token)</h3>
+      <label for="token">Token de GitHub:</label>
+      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    </div>
 
-      <label for="nombre">Tu Nombre Completo:</label>
-      <input type="text" id="nombre" placeholder="Ej: Juan Pérez">
+    <!-- Módulo 1: Publicaciones del Sitio -->
+    <div class="card">
+      <h3>📢 Crear Noticia / Documento / Página Amiga</h3>
+      
+      <label for="tipo">Tipo de Contenido:</label>
+      <select id="tipo" onchange="cambiarTipo()">
+        <option value="noticia">📰 Noticia o Comunicado</option>
+        <option value="documento">📄 Documento / PDF / Archivo</option>
+        <option value="amiga">🔗 Página Amiga / Enlace</option>
+      </select>
 
-      <label for="email">Tu Correo Electrónico:</label>
-      <input type="email" id="email" placeholder="ejemplo@correo.com">
+      <label for="titulo" id="lbl-titulo">Título del Comunicado:</label>
+      <input type="text" id="titulo" placeholder="Ej: Convocatoria a Asamblea">
 
-      <label for="titulo">Título o Asunto:</label>
-      <input type="text" id="titulo" placeholder="Ej: Consulta sobre convenios / Opinión">
+      <div id="sec-fecha">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha">
+      </div>
 
-      <label for="mensaje">Tu Mensaje u Opinión:</label>
-      <textarea id="mensaje" placeholder="Escribe aquí tu mensaje..."></textarea>
+      <div id="sec-url" style="display: none;">
+        <label for="url" id="lbl-url">Dirección Web (URL) o Enlace al PDF:</label>
+        <input type="text" id="url" placeholder="https://...">
+      </div>
 
-      <label for="imagen">Enlace a Fotografía o Imagen (Opcional):</label>
-      <input type="text" id="imagen" placeholder="https://ejemplo.com/mi-foto.jpg">
+      <label for="contenido" id="lbl-contenido">Cuerpo o Texto:</label>
+      <textarea id="contenido" placeholder="Escribe aquí el contenido..."></textarea>
 
-      <button onclick="enviarCarta()">📩 Enviar Mensaje</button>
+      <button onclick="publicar()">🚀 Publicar en el Sitio Web</button>
       <div id="status"></div>
     </div>
 
-    <!-- Muestra de cartas aprobadas -->
+    <!-- Módulo 2: Revisión de Cartas enviadas a la Planilla -->
     <div class="card">
-      <h3>📜 Opiniones Publicadas</h3>
-      <div id="lista-cartas"><p style="color: #666;">Cargando opiniones...</p></div>
+      <h3>📥 Cartas y Opiniones Registradas (Planilla)</h3>
+      <button onclick="cargarCartas()" style="background-color: #003366; margin-bottom: 15px;">🔄 Actualizar Lista desde Planilla</button>
+      <div id="lista-admin-cartas"><p style="color: #666;">Haz clic en actualizar para cargar los mensajes recibidos...</p></div>
     </div>
   </main>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbynlrfh0Z8KBwOuU260thF865CUxB02qNZ815sfk8WDKsiZUuVCsIaZY-KmlXaxEIy-pQ/exec";
+    document.getElementById('fecha').valueAsDate = new Date();
 
-    async function enviarCarta() {
-      const nombre = document.getElementById('nombre').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const titulo = document.getElementById('titulo').value.trim();
-      const mensaje = document.getElementById('mensaje').value.trim();
-      const imagen = document.getElementById('imagen').value.trim();
-      const status = document.getElementById('status');
-
-      if (!nombre || !mensaje) { alert('Por favor completa tu nombre y el mensaje.'); return; }
-
-      status.style.display = 'block';
-      status.className = '';
-      status.innerText = '⏳ Enviando tu mensaje a la planilla...';
-
-      try {
-        await fetch(API_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nombre, email, titulo, mensaje, imagen })
-        });
-
-        status.className = 'success';
-        status.innerText = '✅ ¡Mensaje enviado con éxito! Ha quedado registrado en nuestra planilla para su revisión.';
-        document.getElementById('nombre').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('titulo').value = '';
-        document.getElementById('mensaje').value = '';
-        document.getElementById('imagen').value = '';
-      } catch (err) {
-        status.className = 'error';
-        status.innerText = '❌ Error al enviar el mensaje. Inténtalo nuevamente.';
+    function cambiarTipo() {
+      const tipo = document.getElementById('tipo').value;
+      if (tipo === 'noticia') {
+        document.getElementById('lbl-titulo').innerText = 'Título del Comunicado:';
+        document.getElementById('sec-fecha').style.display = 'block';
+        document.getElementById('sec-url').style.display = 'none';
+        document.getElementById('lbl-contenido').innerText = 'Cuerpo o Texto de la Noticia:';
+      } else if (tipo === 'documento') {
+        document.getElementById('lbl-titulo').innerText = 'Nombre del Documento:';
+        document.getElementById('sec-fecha').style.display = 'block';
+        document.getElementById('sec-url').style.display = 'block';
+        document.getElementById('lbl-url').innerText = 'Enlace de Descarga (PDF / Google Drive):';
+        document.getElementById('lbl-contenido').innerText = 'Descripción del Documento:';
+      } else {
+        document.getElementById('lbl-titulo').innerText = 'Nombre de la Organización / Sitio:';
+        document.getElementById('sec-fecha').style.display = 'none';
+        document.getElementById('sec-url').style.display = 'block';
+        document.getElementById('lbl-url').innerText = 'Dirección Web (URL):';
+        document.getElementById('lbl-contenido').innerText = 'Descripción o Nota breve:';
       }
     }
 
-    async function cargarCartasAprobadas() {
-      const contenedor = document.getElementById('lista-cartas');
+    async function publicar() {
+      const token = document.getElementById('token').value.trim();
+      const tipo = document.getElementById('tipo').value;
+      const titulo = document.getElementById('titulo').value.trim();
+      const status = document.getElementById('status');
+
+      if (!token || !titulo) { alert('Ingresa tu token y el título.'); return; }
+
+      status.style.display = 'block';
+      status.innerText = '⏳ Publicando contenido...';
+
+      const repo = 'lfuentesu/sute-jubilados';
+      const slug = titulo.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+      let ruta = '';
+      let contenidoMd = '';
+
+      if (tipo === 'noticia') {
+        const fecha = document.getElementById('fecha').value;
+        const texto = document.getElementById('contenido').value;
+        ruta = `_noticias/${fecha}-${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${texto}`;
+      } else if (tipo === 'documento') {
+        const fecha = document.getElementById('fecha').value;
+        const url = document.getElementById('url').value.trim();
+        const desc = document.getElementById('contenido').value.trim();
+        ruta = `_documentos/${fecha}-${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\ndescription: "${desc}"\n---`;
+      } else {
+        const url = document.getElementById('url').value.trim();
+        const desc = document.getElementById('contenido').value.trim();
+        ruta = `_paginas_amigas/${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\nurl: "${url}"\ndescription: "${desc}"\n---`;
+      }
+
+      const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoMd)));
+
+      try {
+        const respuesta = await fetch(`https://api.github.com/repos/${repo}/contents/${ruta}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: `Publicación: ${titulo}`, content: contenidoBase64 })
+        });
+
+        if (respuesta.ok) {
+          status.className = 'success';
+          status.innerText = '✅ ¡Publicado correctamente en la web!';
+          document.getElementById('titulo').value = '';
+          document.getElementById('contenido').value = '';
+        } else {
+          throw new Error('Error de autorización');
+        }
+      } catch (err) {
+        status.className = 'error';
+        status.innerText = '❌ Error: Verifique su Token de GitHub.';
+      }
+    }
+
+    async function cargarCartas() {
+      const contenedor = document.getElementById('lista-admin-cartas');
+      contenedor.innerHTML = '<p style="color:#666;">Cargando registro desde la planilla...</p>';
       try {
         const res = await fetch(API_URL);
         const datos = await res.json();
-        const aprobadas = datos.filter(item => item.estado === 'Aprobado');
-
-        if (aprobadas.length === 0) {
-          contenedor.innerHTML = '<p style="color:#777;">Aún no hay opiniones aprobadas publicadas.</p>';
+        
+        if (datos.length === 0) {
+          contenedor.innerHTML = '<p>No hay mensajes registrados aún en la planilla.</p>';
           return;
         }
 
         contenedor.innerHTML = '';
-        aprobadas.forEach(c => {
+        datos.reverse().forEach(item => {
           const div = document.createElement('div');
-          div.className = 'carta-item';
+          div.className = 'item-carta';
           div.innerHTML = `
-            <h4>${c.titulo || 'Opinión de un afiliado'}</h4>
-            <div class="carta-autor">Por: <strong>${c.nombre}</strong> - ${c.fecha}</div>
-            <p>${c.mensaje.replace(/\n/g, '<br>')}</p>
-            ${c.imagen ? `<img src="${c.imagen}" class="carta-img" alt="Foto adjunta">` : ''}
+            <strong>${item.titulo || 'Sin Asunto'}</strong> (${item.fecha})<br>
+            <small>Enviado por: ${item.nombre} (${item.email || 'Sin correo'})</small><br>
+            <p style="margin: 8px 0;">${item.mensaje}</p>
+            ${item.imagen ? `<small>📷 Imagen: <a href="${item.imagen}" target="_blank">Ver archivo adjunto</a></small><br>` : ''}
+            <small>Estado actual: <strong>${item.estado}</strong></small>
           `;
           contenedor.appendChild(div);
         });
       } catch (e) {
-        contenedor.innerHTML = '<p style="color:#777;">No se pudieron cargar las opiniones en este momento.</p>';
+        contenedor.innerHTML = '<p style="color:red;">Error al conectar con la planilla.</p>';
       }
     }
-
-    cargarCartasAprobadas();
   </script>
 
 </body>
