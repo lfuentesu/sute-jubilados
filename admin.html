@@ -34,9 +34,9 @@
   <main>
     <!-- Clave Personal de Acceso -->
     <div class="card">
-      <h3>🔑 Clave de Acceso (GitHub Token)</h3>
-      <label for="token">Token de GitHub:</label>
-      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      <h3>🔑 Clave de Acceso al Panel</h3>
+      <label for="clave">Ingresa la Contraseña de la Directiva:</label>
+      <input type="password" id="clave" placeholder="Escribe aquí la contraseña corta">
     </div>
 
     <!-- Módulo 1: Publicaciones del Sitio -->
@@ -79,6 +79,10 @@
   </main>
 
   <script>
+    // Configuración de Seguridad
+    const CLAVE_CORRECTA = "TU_CONTRASEÑA_CORTA"; // <-- Cambia esto por la contraseña que tú elijas
+    const GITHUB_TOKEN = "TU_TOKEN_DE_GITHUB_AQUÍ"; // <-- Pega aquí tu token largo de GitHub (ghp_...)
+    
     const API_URL = "https://script.google.com/macros/s/AKfycbxJg7fx2YiKHVBh3gzvP1z-BW8BcAhdaDFP7ZgOV1gMUahTIZRaA6PvLWcb3bd6ekzg/exec";
     document.getElementById('fecha').valueAsDate = new Date();
 
@@ -105,14 +109,17 @@
     }
 
     async function publicar() {
-      const token = document.getElementById('token').value.trim();
+      const claveIngresada = document.getElementById('clave').value.trim();
       const tipo = document.getElementById('tipo').value;
       const titulo = document.getElementById('titulo').value.trim();
       const status = document.getElementById('status');
 
-      if (!token || !titulo) { alert('Ingresa tu token y el título.'); return; }
+      if (!claveIngresada) { alert('Por favor ingresa la contraseña.'); return; }
+      if (claveIngresada !== CLAVE_CORRECTA) { alert('Contraseña incorrecta.'); return; }
+      if (!titulo) { alert('Por favor ingresa un título.'); return; }
 
       status.style.display = 'block';
+      status.className = '';
       status.innerText = '⏳ Publicando contenido...';
 
       const repo = 'lfuentesu/sute-jubilados';
@@ -144,7 +151,7 @@
         const respuesta = await fetch(`https://api.github.com/repos/${repo}/contents/${ruta}`, {
           method: 'PUT',
           headers: {
-            'Authorization': `token ${token}`,
+            'Authorization': `token ${GITHUB_TOKEN}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ message: `Publicación: ${titulo}`, content: contenidoBase64 })
@@ -160,7 +167,7 @@
         }
       } catch (err) {
         status.className = 'error';
-        status.innerText = '❌ Error: Verifique su Token de GitHub.';
+        status.innerText = '❌ Error al publicar. Verifique los datos ingresados.';
       }
     }
 
