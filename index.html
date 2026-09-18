@@ -3,199 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUTE-JUBILADOS | Portada Principal</title>
-  <link rel="stylesheet" href="css/estilos.css">
+  <title>SUTE Pensionados | Sitio Oficial</title>
   <style>
-    /* Estilos base para la portada */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f6f9;
-      color: #333;
-    }
-    /* Barra de aviso desplazable */
-    .ticker-wrap {
-      width: 100%;
-      background-color: #003366;
-      color: #ffffff;
-      padding: 10px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      box-sizing: border-box;
-      font-weight: 500;
-    }
-    .ticker {
-      display: inline-block;
-      padding-left: 100%;
-      animation: ticker 25s linear infinite;
-    }
-    @keyframes ticker {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-100%, 0, 0); }
-    }
-    /* Encabezado */
-    header {
-      background-color: #ffffff;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid #003366;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .logo-container img {
-      max-height: 70px;
-      border-radius: 6px;
-    }
-    .title-container h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #003366;
-    }
-    .title-container p {
-      margin: 2px 0 0 0;
-      font-size: 0.9rem;
-      color: #666;
-    }
-    .admin-btn {
-      background-color: #28a745;
-      color: white;
-      padding: 10px 18px;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      transition: background-color 0.2s;
-    }
-    .admin-btn:hover {
-      background-color: #218838;
-    }
-    /* Seccion Central de Saludo */
-    .hero {
-      text-align: center;
-      padding: 40px 20px 20px 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .hero h2 {
-      color: #003366;
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: #555;
-      line-height: 1.5;
-    }
-    /* Rejilla de Secciones en Pestañas Independientes */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 30px auto 60px auto;
-      padding: 0 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      text-decoration: none;
-      color: #333;
-      transition: transform 0.2s, box-shadow 0.2s;
-      border-top: 4px solid #003366;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    }
-    .card-icon {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      display: block;
-    }
-    .card h3 {
-      margin: 0 0 10px 0;
-      color: #003366;
-    }
-    .card p {
-      font-size: 0.9rem;
-      color: #666;
-      margin: 0;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      background-color: #003366;
-      color: white;
-      font-size: 0.9rem;
-    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; color: #333; }
+    header { background-color: #003366; color: white; padding: 25px 20px; text-align: center; }
+    header h1 { margin: 0; font-size: 1.8rem; }
+    header p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+    nav { background-color: #002244; display: flex; justify-content: center; flex-wrap: wrap; padding: 10px 0; }
+    nav a { color: white; text-decoration: none; padding: 8px 16px; font-weight: bold; font-size: 0.9rem; transition: background 0.2s; }
+    nav a:hover { background-color: #004488; border-radius: 4px; }
+    main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+    .seccion { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 30px; }
+    h2 { color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; margin-top: 0; }
+    .tarjeta { background: #f9f9f9; border-left: 4px solid #003366; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
+    .tarjeta h3 { margin: 0 0 5px 0; color: #003366; font-size: 1.1rem; }
+    .tarjeta small { color: #666; font-size: 0.8rem; }
+    .tarjeta p { margin: 8px 0 0 0; line-height: 1.4; }
+    footer { text-align: center; padding: 20px; background-color: #003366; color: white; font-size: 0.85rem; margin-top: 40px; }
+    footer a { color: #88c0ff; text-decoration: none; }
   </style>
 </head>
 <body>
 
-  <!-- BARRA DE MENSAJES DESPLAZABLE -->
-  <div class="ticker-wrap">
-    <div class="ticker">
-      📢 <strong>Aviso Importante:</strong> Bienvenidos a la nueva plataforma digital de SUTE-JUBILADOS. Conoce nuestras actividades, comunicados e información relevante para todos los afiliados.
-    </div>
-  </div>
-
-  <!-- ENCABEZADO CON LOGO Y BOTÓN DE ADMIN -->
   <header>
-    <div class="logo-container">
-      <img src="img/logo.jpeg" alt="Logo SUTE">
-      <div class="title-container">
-        <h1>SUTE-JUBILADOS</h1>
-        <p>Sindicato Independiente de Trabajadores de la Educación con Daño Previsional</p>
-      </div>
-    </div>
-    <a href="admin.html" class="admin-btn">🔐 Acceso Admin</a>
+    <h1>SUTE Pensionados</h1>
+    <p>Sindicato Unificado de Trabajadores de la Educación - Sección Jubilados</p>
   </header>
 
-  <!-- MENSAJE DE BIENVENIDA -->
-  <section class="hero">
-    <h2>Bienvenidos a nuestro Portal Institucional</h2>
-    <p>Selecciona una de las secciones a continuación para acceder a la información, noticias, documentos y enlaces de interés.</p>
-  </section>
+  <nav>
+    <a href="#noticias">📰 Noticias</a>
+    <a href="#literatura">📖 Creación Literaria</a>
+    <a href="#deporte">🏆 Deporte y Valores</a>
+    <a href="#humor">😄 Humor y Anécdotas</a>
+    <a href="#documentos">📄 Documentos</a>
+    <a href="#amigas">🔗 Páginas Amigas</a>
+    <a href="contacto.html">✉️ Contacto / Opinar</a>
+    <a href="admin.html">⚙️ Administración</a>
+  </nav>
 
-  <!-- TARJETAS NAVEGABLES A PÁGINAS INDEPENDIENTES -->
-  <div class="grid-container">
-    <a href="noticias.html" class="card">
-      <span class="card-icon">📰</span>
-      <h3>Noticias</h3>
-      <p>Comunicados, novedades y publicaciones actualizadas.</p>
-    </a>
+  <main>
+    <!-- Noticias -->
+    <section id="noticias" class="seccion">
+      <h2>📰 Comunicados y Noticias</h2>
+      <div id="lista-noticias"><p style="color:#666;">Cargando últimas publicaciones...</p></div>
+    </section>
 
-    <a href="documentos.html" class="card">
-      <span class="card-icon">📑</span>
-      <h3>Documentos</h3>
-      <p>Estatutos, actas y archivos descargables.</p>
-    </a>
+    <!-- Creación Literaria -->
+    <section id="literatura" class="seccion">
+      <h2>📖 Creación Literaria (Cuentos y Poesía)</h2>
+      <div id="lista-literatura"><p style="color:#666;">Cargando creaciones literarias...</p></div>
+    </section>
 
-    <a href="paginas-amigas.html" class="card">
-      <span class="card-icon">🔗</span>
-      <h3>Páginas Amigas</h3>
-      <p>Organizaciones e instituciones aliadas.</p>
-    </a>
+    <!-- Deporte y Valores -->
+    <section id="deporte" class="seccion">
+      <h2>🏆 Deporte y Valores (Homenajes y Trayectoria)</h2>
+      <div id="lista-deporte"><p style="color:#666;">Cargando reconocimientos deportivos...</p></div>
+    </section>
 
-    <a href="contacto.html" class="card">
-      <span class="card-icon">📞</span>
-      <h3>Contacto</h3>
-      <p>Formulario de consultas y datos institucionales.</p>
-    </a>
-  </div>
+    <!-- Humor y Anécdotas -->
+    <section id="humor" class="seccion">
+      <h2>😄 Humor y Anécdotas Magisteriales</h2>
+      <div id="lista-humor"><p style="color:#666;">Cargando anécdotas de la trayectoria docente...</p></div>
+    </section>
+
+    <!-- Documentos -->
+    <section id="documentos" class="seccion">
+      <h2>📄 Documentos de Interés</h2>
+      <div id="lista-documentos"><p style="color:#666;">Cargando archivos y documentos...</p></div>
+    </section>
+
+    <!-- Páginas Amigas -->
+    <section id="amigas" class="seccion">
+      <h2>🔗 Páginas Amigas y Enlaces Recomendados</h2>
+      <div id="lista-amigas"><p style="color:#666;">Cargando sitios recomendados...</p></div>
+    </section>
+  </main>
 
   <footer>
-    <p>&copy; SUTE-JUBILADOS. Todos los derechos reservados.</p>
+    <p>© SUTE Pensionados - Espacio de difusión y encuentro docente.</p>
   </footer>
+
+  <script>
+    // Carga dinámica básica de secciones
+    async function cargarSeccion(carpeta, contenedorId, formateador) {
+      const contenedor = document.getElementById(contenedorId);
+      try {
+        const repo = 'lfuentesu/sute-jubilados';
+        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${carpeta}`);
+        if (!res.ok) {
+          contenedor.innerHTML = '<p style="color:#888;">No hay publicaciones en esta sección aún.</p>';
+          return;
+        }
+        const archivos = await res.json();
+        if (!Array.isArray(archivos) || archivos.length === 0) {
+          contenedor.innerHTML = '<p style="color:#888;">No hay publicaciones en esta sección aún.</p>';
+          return;
+        }
+
+        contenedor.innerHTML = '';
+        for (const file of archivos.reverse()) {
+          if (file.name.endsWith('.md')) {
+            const contentRes = await fetch(file.download_url);
+            const rawText = await contentRes.text();
+            contenedor.appendChild(formateador(rawText));
+          }
+        }
+      } catch (e) {
+        contenedor.innerHTML = '<p style="color:#888;">No hay publicaciones en esta sección aún.</p>';
+      }
+    }
+
+    function extraerMeta(rawText) {
+      const lineas = rawText.split('\n');
+      let title = 'Sin título';
+      let date = '';
+      let url = '';
+      let imagen = '';
+      let description = '';
+      let cuerpo = [];
+      let inMeta = false;
+
+      for (let l of lineas) {
+        if (l.trim() === '---') {
+          inMeta = !inMeta;
+          continue;
+        }
+        if (inMeta) {
+          if (l.startsWith('title:')) title = l.replace('title:', '').trim().replace(/^"/, '').replace(/"$/, '');
+          if (l.startsWith('date:')) date = l.replace('date:', '').trim().replace(/^"/, '').replace(/"$/, '');
+          if (l.startsWith('url:')) url = l.replace('url:', '').trim().replace(/^"/, '').replace(/"$/, '');
+          if (l.startsWith('imagen:')) imagen = l.replace('imagen:', '').trim().replace(/^"/, '').replace(/"$/, '');
+          if (l.startsWith('description:')) description = l.replace('description:', '').trim().replace(/^"/, '').replace(/"$/, '');
+        } else {
+          cuerpo.push(l);
+        }
+      }
+      return { title, date, url, imagen, description, texto: cuerpo.join('\n').trim() };
+    }
+
+    // Formateadores
+    function fNoticia(raw) {
+      const m = extraerMeta(raw);
+      const div = document.createElement('div');
+      div.className = 'tarjeta';
+      div.innerHTML = `<h3>${m.title}</h3><small>📅 ${m.date}</small><p>${m.texto}</p>`;
+      return div;
+    }
+
+    function fLiteratura(raw) {
+      const m = extraerMeta(raw);
+      const div = document.createElement('div');
+      div.className = 'tarjeta';
+      div.innerHTML = `
+        <h3>${m.title}</h3>
+        <small>📅 ${m.date}</small>
+        <p>${m.texto}</p>
+        ${m.url ? `<p><a href="${m.url}" target="_blank">📄 Ver/Descargar Obra Adjunta</a></p>` : ''}
+      `;
+      return div;
+    }
+
+    function fDeporte(raw) {
+      const m = extraerMeta(raw);
+      const div = document.createElement('div');
+      div.className = 'tarjeta';
+      div.innerHTML = `
+        <h3>${m.title}</h3>
+        <small>📅 ${m.date}</small>
+        ${m.imagen ? `<p><img src="${m.imagen}" alt="${m.title}" style="max-width:100%; border-radius:5px; margin: 10px 0;"></p>` : ''}
+        <p>${m.texto}</p>
+      `;
+      return div;
+    }
+
+    function fHumor(raw) {
+      const m = extraerMeta(raw);
+      const div = document.createElement('div');
+      div.className = 'tarjeta';
+      div.innerHTML = `<h3>${m.title}</h3><small>📅 ${m.date}</small><p>${m.texto}</p>`;
+      return div;
+    }
+
+    function fDoc(raw) {
+      const m = extraerMeta(raw);
+      const div = document.createElement('div');
+      div.className = 'tarjeta';
+      div.innerHTML = `
+        <h3>${m.title}</h3>
+        <small>📅 ${m.date}</small>
+        <p>${m.description}</p>
+        ${m.url ? `<p><a href="${m.url}" target="_blank">📥 Descargar Documento</a></p>` : ''}
+      `;
+      return div;
+    }
+
+    function fAmiga(raw) {
+      const m = extraerMeta(raw);
+      const div = document.createElement('div');
+      div.className = 'tarjeta';
+      div.innerHTML = `
+        <h3><a href="${m.url}" target="_blank">${m.title}</a></h3>
+        <p>${m.description}</p>
+      `;
+      return div;
+    }
+
+    // Inicializar cargas
+    cargarSeccion('_noticias', 'lista-noticias', fNoticia);
+    cargarSeccion('_literatura', 'lista-literatura', fLiteratura);
+    cargarSeccion('_deporte', 'lista-deporte', fDeporte);
+    cargarSeccion('_humor', 'lista-humor', fHumor);
+    cargarSeccion('_documentos', 'lista-documentos', fDoc);
+    cargarSeccion('_paginas_amigas', 'lista-amigas', fAmiga);
+  </script>
 
 </body>
 </html>
