@@ -16,7 +16,7 @@
     input[type="text"], input[type="password"], input[type="date"], textarea, select {
       width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem; box-sizing: border-box;
     }
-    textarea { height: 100px; resize: vertical; }
+    textarea { height: 120px; resize: vertical; }
     button { background-color: #28a745; color: white; font-weight: bold; font-size: 1rem; border: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 100%; }
     #status { margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; text-align: center; display: none; }
     .success { background-color: #d4edda; color: #155724; }
@@ -41,17 +41,20 @@
 
     <!-- Módulo 1: Publicaciones del Sitio -->
     <div class="card">
-      <h3>📢 Crear Noticia / Documento / Página Amiga</h3>
+      <h3>📢 Crear Publicación en el Sitio</h3>
       
-      <label for="tipo">Tipo de Contenido:</label>
+      <label for="tipo">Sección / Tipo de Contenido:</label>
       <select id="tipo" onchange="cambiarTipo()">
         <option value="noticia">📰 Noticia o Comunicado</option>
+        <option value="literatura">📖 Creación Literaria (Cuentos / Poesía)</option>
+        <option value="deporte">🏆 Deporte y Valores (Homenajes / Ética)</option>
+        <option value="humor">😄 Humor y Anécdotas Magisteriales</option>
         <option value="documento">📄 Documento / PDF / Archivo</option>
         <option value="amiga">🔗 Página Amiga / Enlace</option>
       </select>
 
-      <label for="titulo" id="lbl-titulo">Título del Comunicado:</label>
-      <input type="text" id="titulo" placeholder="Ej: Convocatoria a Asamblea">
+      <label for="titulo" id="lbl-titulo">Título de la Publicación:</label>
+      <input type="text" id="titulo" placeholder="Ej: Obra, homenaje o titular de la noticia">
 
       <div id="sec-fecha">
         <label for="fecha">Fecha:</label>
@@ -59,12 +62,12 @@
       </div>
 
       <div id="sec-url" style="display: none;">
-        <label for="url" id="lbl-url">Dirección Web (URL) o Enlace al PDF:</label>
+        <label for="url" id="lbl-url">Enlace / Imagen / Adjunto (Opcional o URL):</label>
         <input type="text" id="url" placeholder="https://...">
       </div>
 
-      <label for="contenido" id="lbl-contenido">Cuerpo o Texto:</label>
-      <textarea id="contenido" placeholder="Escribe aquí el contenido..."></textarea>
+      <label for="contenido" id="lbl-contenido">Texto o Contenido Principal:</label>
+      <textarea id="contenido" placeholder="Escribe aquí el texto, cuento, anécdota o reseña..."></textarea>
 
       <button onclick="publicar()">🚀 Publicar en el Sitio Web</button>
       <div id="status"></div>
@@ -72,39 +75,62 @@
 
     <!-- Módulo 2: Revisión de Cartas enviadas a la Planilla -->
     <div class="card">
-      <h3>📥 Cartas y Opiniones Registradas (Planilla)</h3>
+      <h3>📥 Mensajes y Aportes Recibidos (Planilla)</h3>
       <button onclick="cargarCartas()" style="background-color: #003366; margin-bottom: 15px;">🔄 Actualizar Lista desde Planilla</button>
-      <div id="lista-admin-cartas"><p style="color: #666;">Haz clic en actualizar para cargar los mensajes recibidos...</p></div>
+      <div id="lista-admin-cartas"><p style="color: #666;">Haz clic en actualizar para cargar las contribuciones y consultas de los afiliados...</p></div>
     </div>
   </main>
 
   <script>
-    // Configuración de Seguridad
-    const CLAVE_CORRECTA = "TU_CONTRASEÑA_CORTA"; // <-- Cambia esto por la contraseña que tú elijas
-    const GITHUB_TOKEN = "TU_TOKEN_DE_GITHUB_AQUÍ"; // <-- Pega aquí tu token largo de GitHub (ghp_...)
+    // *****************************************************************
+    // IMPORTANTE: REEMPLAZA ESTOS DOS VALORES ENTRE LAS COMILLAS:
     
+    const CLAVE_CORRECTA = "REEMPLAZAR_POR_TU_CLAVE_CORTA"; 
+    const GITHUB_TOKEN = "REEMPLAZAR_POR_TU_TOKEN_LARGO_GHP"; 
+    
+    // *****************************************************************
+
     const API_URL = "https://script.google.com/macros/s/AKfycbxJg7fx2YiKHVBh3gzvP1z-BW8BcAhdaDFP7ZgOV1gMUahTIZRaA6PvLWcb3bd6ekzg/exec";
     document.getElementById('fecha').valueAsDate = new Date();
 
     function cambiarTipo() {
       const tipo = document.getElementById('tipo').value;
+      const lblTitulo = document.getElementById('lbl-titulo');
+      const lblContenido = document.getElementById('lbl-contenido');
+      const secFecha = document.getElementById('sec-fecha');
+      const secUrl = document.getElementById('sec-url');
+      const lblUrl = document.getElementById('lbl-url');
+
+      secFecha.style.display = 'block';
+      secUrl.style.display = 'none';
+
       if (tipo === 'noticia') {
-        document.getElementById('lbl-titulo').innerText = 'Título del Comunicado:';
-        document.getElementById('sec-fecha').style.display = 'block';
-        document.getElementById('sec-url').style.display = 'none';
-        document.getElementById('lbl-contenido').innerText = 'Cuerpo o Texto de la Noticia:';
+        lblTitulo.innerText = 'Título del Comunicado:';
+        lblContenido.innerText = 'Cuerpo o Texto de la Noticia:';
+      } else if (tipo === 'literatura') {
+        lblTitulo.innerText = 'Título del Cuento / Poema / Obra:';
+        lblContenido.innerText = 'Texto de la Obra Literaria:';
+        secUrl.style.display = 'block';
+        lblUrl.innerText = 'Enlace a PDF / Drive (Opcional si es un documento adjunto):';
+      } else if (tipo === 'deporte') {
+        lblTitulo.innerText = 'Nombre del Deportista / Titular del Homenaje:';
+        lblContenido.innerText = 'Reseña de Trayectoria y Valores Éticos/Morales:';
+        secUrl.style.display = 'block';
+        lblUrl.innerText = 'Enlace a Fotografía o Imagen (Opcional):';
+      } else if (tipo === 'humor') {
+        lblTitulo.innerText = 'Título de la Anécdota o Vivencia:';
+        lblContenido.innerText = 'Relato de la Anécdota Docente:';
       } else if (tipo === 'documento') {
-        document.getElementById('lbl-titulo').innerText = 'Nombre del Documento:';
-        document.getElementById('sec-fecha').style.display = 'block';
-        document.getElementById('sec-url').style.display = 'block';
-        document.getElementById('lbl-url').innerText = 'Enlace de Descarga (PDF / Google Drive):';
-        document.getElementById('lbl-contenido').innerText = 'Descripción del Documento:';
-      } else {
-        document.getElementById('lbl-titulo').innerText = 'Nombre de la Organización / Sitio:';
-        document.getElementById('sec-fecha').style.display = 'none';
-        document.getElementById('sec-url').style.display = 'block';
-        document.getElementById('lbl-url').innerText = 'Dirección Web (URL):';
-        document.getElementById('lbl-contenido').innerText = 'Descripción o Nota breve:';
+        lblTitulo.innerText = 'Nombre del Documento:';
+        secUrl.style.display = 'block';
+        lblUrl.innerText = 'Enlace de Descarga (PDF / Google Drive):';
+        lblContenido.innerText = 'Descripción del Documento:';
+      } else if (tipo === 'amiga') {
+        lblTitulo.innerText = 'Nombre de la Organización / Sitio:';
+        secFecha.style.display = 'none';
+        secUrl.style.display = 'block';
+        lblUrl.innerText = 'Dirección Web (URL):';
+        lblContenido.innerText = 'Descripción o Nota breve:';
       }
     }
 
@@ -126,23 +152,28 @@
       const slug = titulo.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
       let ruta = '';
       let contenidoMd = '';
+      const fecha = document.getElementById('fecha').value;
+      const texto = document.getElementById('contenido').value.trim();
+      const url = document.getElementById('url').value.trim();
 
       if (tipo === 'noticia') {
-        const fecha = document.getElementById('fecha').value;
-        const texto = document.getElementById('contenido').value;
         ruta = `_noticias/${fecha}-${slug}.md`;
         contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${texto}`;
+      } else if (tipo === 'literatura') {
+        ruta = `_literatura/${fecha}-${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\n---\n\n${texto}`;
+      } else if (tipo === 'deporte') {
+        ruta = `_deporte/${fecha}-${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nimagen: "${url}"\n---\n\n${texto}`;
+      } else if (tipo === 'humor') {
+        ruta = `_humor/${fecha}-${slug}.md`;
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${texto}`;
       } else if (tipo === 'documento') {
-        const fecha = document.getElementById('fecha').value;
-        const url = document.getElementById('url').value.trim();
-        const desc = document.getElementById('contenido').value.trim();
         ruta = `_documentos/${fecha}-${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\ndescription: "${desc}"\n---`;
-      } else {
-        const url = document.getElementById('url').value.trim();
-        const desc = document.getElementById('contenido').value.trim();
+        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\ndescription: "${texto}"\n---`;
+      } else if (tipo === 'amiga') {
         ruta = `_paginas_amigas/${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\nurl: "${url}"\ndescription: "${desc}"\n---`;
+        contenidoMd = `---\ntitle: "${titulo}"\nurl: "${url}"\ndescription: "${texto}"\n---`;
       }
 
       const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoMd)));
@@ -154,7 +185,7 @@
             'Authorization': `token ${GITHUB_TOKEN}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ message: `Publicación: ${titulo}`, content: contenidoBase64 })
+          body: JSON.stringify({ message: `Publicación [${tipo}]: ${titulo}`, content: contenidoBase64 })
         });
 
         if (respuesta.ok) {
@@ -162,6 +193,7 @@
           status.innerText = '✅ ¡Publicado correctamente en la web!';
           document.getElementById('titulo').value = '';
           document.getElementById('contenido').value = '';
+          document.getElementById('url').value = '';
         } else {
           throw new Error('Error de autorización');
         }
@@ -191,7 +223,7 @@
             <strong>${item.titulo || 'Sin Asunto'}</strong> (${item.fecha})<br>
             <small>Enviado por: ${item.nombre} (${item.email || 'Sin correo'})</small><br>
             <p style="margin: 8px 0;">${item.mensaje}</p>
-            ${item.imagen ? `<small>📷 Imagen: <a href="${item.imagen}" target="_blank">Ver archivo adjunto</a></small><br>` : ''}
+            ${item.imagen ? `<small>📷 Archivo / Imagen: <a href="${item.imagen}" target="_blank">Ver archivo adjunto</a></small><br>` : ''}
             <small>Estado actual: <strong>${item.estado}</strong></small>
           `;
           contenedor.appendChild(div);
