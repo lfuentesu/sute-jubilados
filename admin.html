@@ -21,7 +21,6 @@
     #status { margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; text-align: center; display: none; }
     .success { background-color: #d4edda; color: #155724; }
     .error { background-color: #f8d7da; color: #721c24; }
-    .item-carta { background: #f8f9fa; border-left: 4px solid #003366; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -32,18 +31,16 @@
   </header>
 
   <main>
-    <!-- Clave Personal y Token -->
     <div class="card">
       <h3>🔑 Claves de Acceso al Panel</h3>
-      <label for="clave">1. Contraseña de la Directiva:</label>
-      <input type="password" id="clave" placeholder="Ingresa tu contraseña corta">
+      <label for="clave">1. Contraseña del Panel:</label>
+      <input type="password" id="clave" value="SUTEPENSIONADOS">
       
       <label for="token-usr">2. Token Personal de GitHub (ghp_...):</label>
-      <input type="password" id="token-usr" placeholder="Pega aquí tu token ghp_ (Se guardará localmente en tu navegador)">
-      <small style="color: #666;">Al ingresarlo aquí, el navegador lo recordará de forma privada sin exponerlo públicamente en GitHub.</small>
+      <input type="password" id="token-usr" placeholder="Pega aquí tu token ghp_">
+      <small style="color: #666;">Se guardará localmente en tu equipo para que GitHub nunca te lo anule.</small>
     </div>
 
-    <!-- Módulo 1: Publicaciones del Sitio -->
     <div class="card">
       <h3>📢 Crear Publicación en el Sitio</h3>
       
@@ -66,75 +63,30 @@
       </div>
 
       <div id="sec-url" style="display: none;">
-        <label for="url" id="lbl-url">Enlace / Imagen / Adjunto (Opcional o URL):</label>
+        <label for="url" id="lbl-url">Enlace / Imagen / Adjunto (Opcional):</label>
         <input type="text" id="url" placeholder="https://...">
       </div>
 
       <label for="contenido" id="lbl-contenido">Texto o Contenido Principal:</label>
-      <textarea id="contenido" placeholder="Escribe aquí el texto, cuento, anécdota o reseña..."></textarea>
+      <textarea id="contenido" placeholder="Escribe aquí el texto, cuento o anécdota..."></textarea>
 
       <button onclick="publicar()">🚀 Publicar en el Sitio Web</button>
       <div id="status"></div>
     </div>
-
-    <!-- Módulo 2: Revisión de Cartas enviadas a la Planilla -->
-    <div class="card">
-      <h3>📥 Mensajes y Aportes Recibidos (Planilla)</h3>
-      <button onclick="cargarCartas()" style="background-color: #003366; margin-bottom: 15px;">🔄 Actualizar Lista desde Planilla</button>
-      <div id="lista-admin-cartas"><p style="color: #666;">Haz clic en actualizar para cargar las contribuciones y consultas de los afiliados...</p></div>
-    </div>
   </main>
 
   <script>
-    const CLAVE_CORRECTA = "SUTEPENSIONADOS"; // Puedes cambiar esta contraseña
-    const API_URL = "https://script.google.com/macros/s/AKfycbxJg7fx2YiKHVBh3gzvP1z-BW8BcAhdaDFP7ZgOV1gMUahTIZRaA6PvLWcb3bd6ekzg/exec";
-    
+    const CLAVE_CORRECTA = "SUTEPENSIONADOS";
     document.getElementById('fecha').valueAsDate = new Date();
 
-    // Cargar token guardado en el navegador del usuario si existe
     if (localStorage.getItem('sute_github_token')) {
       document.getElementById('token-usr').value = localStorage.getItem('sute_github_token');
     }
 
     function cambiarTipo() {
       const tipo = document.getElementById('tipo').value;
-      const lblTitulo = document.getElementById('lbl-titulo');
-      const lblContenido = document.getElementById('lbl-contenido');
-      const secFecha = document.getElementById('sec-fecha');
       const secUrl = document.getElementById('sec-url');
-      const lblUrl = document.getElementById('lbl-url');
-
-      secFecha.style.display = 'block';
-      secUrl.style.display = 'none';
-
-      if (tipo === 'noticia') {
-        lblTitulo.innerText = 'Título del Comunicado:';
-        lblContenido.innerText = 'Cuerpo o Texto de la Noticia:';
-      } else if (tipo === 'literatura') {
-        lblTitulo.innerText = 'Título del Cuento / Poema / Obra:';
-        lblContenido.innerText = 'Texto de la Obra Literaria:';
-        secUrl.style.display = 'block';
-        lblUrl.innerText = 'Enlace a PDF / Drive (Opcional si es un documento adjunto):';
-      } else if (tipo === 'deporte') {
-        lblTitulo.innerText = 'Nombre del Deportista / Titular del Homenaje:';
-        lblContenido.innerText = 'Reseña de Trayectoria y Valores Éticos/Morales:';
-        secUrl.style.display = 'block';
-        lblUrl.innerText = 'Enlace a Fotografía o Imagen (Opcional):';
-      } else if (tipo === 'humor') {
-        lblTitulo.innerText = 'Título de la Anécdota o Vivencia:';
-        lblContenido.innerText = 'Relato de la Anécdota Docente:';
-      } else if (tipo === 'documento') {
-        lblTitulo.innerText = 'Nombre del Documento:';
-        secUrl.style.display = 'block';
-        lblUrl.innerText = 'Enlace de Descarga (PDF / Google Drive):';
-        lblContenido.innerText = 'Descripción del Documento:';
-      } else if (tipo === 'amiga') {
-        lblTitulo.innerText = 'Nombre de la Organización / Sitio:';
-        secFecha.style.display = 'none';
-        secUrl.style.display = 'block';
-        lblUrl.innerText = 'Dirección Web (URL):';
-        lblContenido.innerText = 'Descripción o Nota breve:';
-      }
+      secUrl.style.display = (tipo === 'literatura' || tipo === 'deporte' || tipo === 'documento' || tipo === 'amiga') ? 'block' : 'none';
     }
 
     async function publicar() {
@@ -144,12 +96,10 @@
       const titulo = document.getElementById('titulo').value.trim();
       const status = document.getElementById('status');
 
-      if (!claveIngresada) { alert('Por favor ingresa la contraseña.'); return; }
       if (claveIngresada !== CLAVE_CORRECTA) { alert('Contraseña incorrecta.'); return; }
-      if (!tokenIngresado) { alert('Por favor ingresa tu Token de GitHub en la casilla superior.'); return; }
+      if (!tokenIngresado) { alert('Por favor ingresa tu Token de GitHub en el campo correspondiente.'); return; }
       if (!titulo) { alert('Por favor ingresa un título.'); return; }
 
-      // Guardar token en el navegador para futuras publicaciones
       localStorage.setItem('sute_github_token', tokenIngresado);
 
       status.style.display = 'block';
@@ -158,32 +108,14 @@
 
       const repo = 'lfuentesu/sute-jubilados';
       const slug = titulo.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-      let ruta = '';
-      let contenidoMd = '';
       const fecha = document.getElementById('fecha').value;
       const texto = document.getElementById('contenido').value.trim();
       const url = document.getElementById('url').value.trim();
 
-      if (tipo === 'noticia') {
-        ruta = `_noticias/${fecha}-${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${texto}`;
-      } else if (tipo === 'literatura') {
-        ruta = `_literatura/${fecha}-${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\n---\n\n${texto}`;
-      } else if (tipo === 'deporte') {
-        ruta = `_deporte/${fecha}-${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nimagen: "${url}"\n---\n\n${texto}`;
-      } else if (tipo === 'humor') {
-        ruta = `_humor/${fecha}-${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${texto}`;
-      } else if (tipo === 'documento') {
-        ruta = `_documentos/${fecha}-${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\ndescription: "${texto}"\n---`;
-      } else if (tipo === 'amiga') {
-        ruta = `_paginas_amigas/${slug}.md`;
-        contenidoMd = `---\ntitle: "${titulo}"\nurl: "${url}"\ndescription: "${texto}"\n---`;
-      }
+      let ruta = `_${tipo}/${fecha}-${slug}.md`;
+      if (tipo === 'amiga') ruta = `_paginas_amigas/${slug}.md`;
 
+      let contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\n---\n\n${texto}`;
       const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoMd)));
 
       try {
@@ -201,46 +133,14 @@
           status.innerText = '✅ ¡Publicado correctamente en la web!';
           document.getElementById('titulo').value = '';
           document.getElementById('contenido').value = '';
-          document.getElementById('url').value = '';
         } else {
-          throw new Error('Error de autorización');
+          throw new Error('Error');
         }
       } catch (err) {
         status.className = 'error';
-        status.innerText = '❌ Error al publicar. Verifique el Token ingresado.';
-      }
-    }
-
-    async function cargarCartas() {
-      const contenedor = document.getElementById('lista-admin-cartas');
-      contenedor.innerHTML = '<p style="color:#666;">Cargando registro desde la planilla...</p>';
-      try {
-        const res = await fetch(API_URL);
-        const datos = await res.json();
-        
-        if (datos.length === 0) {
-          contenedor.innerHTML = '<p>No hay mensajes registrados aún en la planilla.</p>';
-          return;
-        }
-
-        contenedor.innerHTML = '';
-        datos.reverse().forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'item-carta';
-          div.innerHTML = `
-            <strong>${item.titulo || 'Sin Asunto'}</strong> (${item.fecha})<br>
-            <small>Enviado por: ${item.nombre} (${item.email || 'Sin correo'})</small><br>
-            <p style="margin: 8px 0;">${item.mensaje}</p>
-            ${item.imagen ? `<small>📷 Archivo / Imagen: <a href="${item.imagen}" target="_blank">Ver archivo adjunto</a></small><br>` : ''}
-            <small>Estado actual: <strong>${item.estado}</strong></small>
-          `;
-          contenedor.appendChild(div);
-        });
-      } catch (e) {
-        contenedor.innerHTML = '<p style="color:red;">Error al conectar con la planilla.</p>';
+        status.innerText = '❌ Error al publicar. Revisa que el Token ingresado sea correcto y esté activo.';
       }
     }
   </script>
-
 </body>
 </html>
