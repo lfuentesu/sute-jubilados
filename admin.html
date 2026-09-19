@@ -32,11 +32,15 @@
   </header>
 
   <main>
-    <!-- Clave Personal de Acceso -->
+    <!-- Clave Personal y Token -->
     <div class="card">
-      <h3>🔑 Clave de Acceso al Panel</h3>
-      <label for="clave">Ingresa la Contraseña de la Directiva:</label>
-      <input type="password" id="clave" placeholder="Escribe aquí la contraseña corta">
+      <h3>🔑 Claves de Acceso al Panel</h3>
+      <label for="clave">1. Contraseña de la Directiva:</label>
+      <input type="password" id="clave" placeholder="Ingresa tu contraseña corta">
+      
+      <label for="token-usr">2. Token Personal de GitHub (ghp_...):</label>
+      <input type="password" id="token-usr" placeholder="Pega aquí tu token ghp_ (Se guardará localmente en tu navegador)">
+      <small style="color: #666;">Al ingresarlo aquí, el navegador lo recordará de forma privada sin exponerlo públicamente en GitHub.</small>
     </div>
 
     <!-- Módulo 1: Publicaciones del Sitio -->
@@ -82,16 +86,15 @@
   </main>
 
   <script>
-    // *****************************************************************
-    // IMPORTANTE: REEMPLAZA ESTOS DOS VALORES ENTRE LAS COMILLAS:
-    
-    const CLAVE_CORRECTA = "SUTEPENSIONADOS"; 
-    const GITHUB_TOKEN = "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"; 
-    
-    // *****************************************************************
-
+    const CLAVE_CORRECTA = "SUTEPENSIONADOS"; // Puedes cambiar esta contraseña
     const API_URL = "https://script.google.com/macros/s/AKfycbxJg7fx2YiKHVBh3gzvP1z-BW8BcAhdaDFP7ZgOV1gMUahTIZRaA6PvLWcb3bd6ekzg/exec";
+    
     document.getElementById('fecha').valueAsDate = new Date();
+
+    // Cargar token guardado en el navegador del usuario si existe
+    if (localStorage.getItem('sute_github_token')) {
+      document.getElementById('token-usr').value = localStorage.getItem('sute_github_token');
+    }
 
     function cambiarTipo() {
       const tipo = document.getElementById('tipo').value;
@@ -136,13 +139,18 @@
 
     async function publicar() {
       const claveIngresada = document.getElementById('clave').value.trim();
+      const tokenIngresado = document.getElementById('token-usr').value.trim();
       const tipo = document.getElementById('tipo').value;
       const titulo = document.getElementById('titulo').value.trim();
       const status = document.getElementById('status');
 
       if (!claveIngresada) { alert('Por favor ingresa la contraseña.'); return; }
       if (claveIngresada !== CLAVE_CORRECTA) { alert('Contraseña incorrecta.'); return; }
+      if (!tokenIngresado) { alert('Por favor ingresa tu Token de GitHub en la casilla superior.'); return; }
       if (!titulo) { alert('Por favor ingresa un título.'); return; }
+
+      // Guardar token en el navegador para futuras publicaciones
+      localStorage.setItem('sute_github_token', tokenIngresado);
 
       status.style.display = 'block';
       status.className = '';
@@ -182,7 +190,7 @@
         const respuesta = await fetch(`https://api.github.com/repos/${repo}/contents/${ruta}`, {
           method: 'PUT',
           headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Authorization': `token ${tokenIngresado}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ message: `Publicación [${tipo}]: ${titulo}`, content: contenidoBase64 })
@@ -199,7 +207,7 @@
         }
       } catch (err) {
         status.className = 'error';
-        status.innerText = '❌ Error al publicar. Verifique los datos ingresados.';
+        status.innerText = '❌ Error al publicar. Verifique el Token ingresado.';
       }
     }
 
