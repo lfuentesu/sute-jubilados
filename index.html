@@ -57,6 +57,7 @@
       font-weight: bold;
       font-size: 0.95rem;
       transition: background 0.3s;
+      cursor: pointer;
     }
     nav a:hover, nav a.active {
       background-color: var(--secondary);
@@ -101,7 +102,13 @@
     }
     .card p {
       font-size: 0.95rem;
-      line-height: 1.4;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .card .fecha {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 8px;
     }
     .card a {
       color: var(--secondary);
@@ -124,7 +131,7 @@
     <div class="header-content">
       <img src="img/logo.jpeg" alt="Logo SUTE" class="logo-img" onerror="this.style.display='none'">
       <div>
-        <h1>Sindicato Unico de Trabajadores de la Educación</h1>
+        <h1>Sindicato Único de Trabajadores de la Educación</h1>
         <p>Sección Pensionados y Jubilados</p>
       </div>
     </div>
@@ -151,33 +158,33 @@
     <section id="literatura" class="section-block">
       <h2>📖 Creación Literaria</h2>
       <p>Espacio dedicado a cuentos, relatos y obras poéticas de nuestros afiliados.</p>
-      <div id="contenedor-literatura" class="grid"><p>No hay obras registradas aún.</p></div>
+      <div id="contenedor-literatura" class="grid"><p>Cargando obras...</p></div>
     </section>
 
     <!-- Deporte y Valores -->
     <section id="deporte" class="section-block">
       <h2>🏆 Deporte y Valores</h2>
       <p>Reconocimiento a trayectorias deportivas, vida sana y valores éticos/morales.</p>
-      <div id="contenedor-deporte" class="grid"><p>No hay publicaciones registradas aún.</p></div>
+      <div id="contenedor-deporte" class="grid"><p>Cargando contenido...</p></div>
     </section>
 
     <!-- Humor y Anécdotas -->
     <section id="humor" class="section-block">
       <h2>😄 Humor y Anécdotas Magisteriales</h2>
       <p>Vivencias, historias amables y recuerdos del ejercicio docente.</p>
-      <div id="contenedor-humor" class="grid"><p>No hay anécdotas registradas aún.</p></div>
+      <div id="contenedor-humor" class="grid"><p>Cargando anécdotas...</p></div>
     </section>
 
     <!-- Documentos -->
     <section id="documentos" class="section-block">
       <h2>📄 Documentos de Interés</h2>
-      <div id="contenedor-documentos" class="grid"><p>No hay documentos disponibles aún.</p></div>
+      <div id="contenedor-documentos" class="grid"><p>Cargando documentos...</p></div>
     </section>
 
     <!-- Páginas Amigas -->
     <section id="amigas" class="section-block">
       <h2>🔗 Páginas Amigas</h2>
-      <div id="contenedor-amigas" class="grid"><p>No hay enlaces disponibles aún.</p></div>
+      <div id="contenedor-amigas" class="grid"><p>Cargando enlaces...</p></div>
     </section>
   </main>
 
@@ -186,6 +193,8 @@
   </footer>
 
   <script>
+    const REPO = "lfuentesu/sute-jubilados";
+
     function mostrarSeccion(id, elemento) {
       document.querySelectorAll('.section-block').forEach(sec => sec.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
@@ -194,6 +203,65 @@
       if (seccion) seccion.classList.add('active');
       if (elemento) elemento.classList.add('active');
     }
+
+    async function cargarPublicaciones(carpeta, idContenedor) {
+      const contenedor = document.getElementById(idContenedor);
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${carpeta}`);
+        if (!res.ok) {
+          contenedor.innerHTML = '<p>No hay publicaciones registradas aún en esta sección.</p>';
+          return;
+        }
+        const archivos = await res.json();
+        const archivosMd = archivos.filter(f => f.name.endsWith('.md'));
+
+        if (archivosMd.length === 0) {
+          contenedor.innerHTML = '<p>No hay publicaciones registradas aún en esta sección.</p>';
+          return;
+        }
+
+        contenedor.innerHTML = '';
+
+        for (const archivo of archivosMd.reverse()) {
+          const resContenido = await fetch(archivo.download_url);
+          const textoMd = await resContenido.text();
+
+          // Extraer Frontmatter (metadatos) y cuerpo
+          const matchTitle = textoMd.match(/title:\s*"([^"]+)"/);
+          const matchDate = textoMd.match(/date:\s*"([^"]+)"/);
+          const matchUrl = textoMd.match(/url:\s*"([^"]+)"/);
+          
+          const titulo = matchTitle ? matchTitle[1] : archivo.name;
+          const fecha = matchDate ? matchDate[1] : '';
+          const url = matchUrl ? matchUrl[1] : '';
+
+          // Limpiar encabezados Markdown del texto
+          const cuerpo = textoMd.replace(/^---[\s\S]*?---/, '').trim();
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3>${titulo}</h3>
+            ${fecha ? `<div class="fecha">📅 ${fecha}</div>` : ''}
+            <p>${cuerpo}</p>
+            ${url ? `<p><a href="${url}" target="_blank">🔗 Ver enlace / adjunto</a></p>` : ''}
+          `;
+          contenedor.appendChild(card);
+        }
+      } catch (err) {
+        contenedor.innerHTML = '<p>No hay publicaciones cargadas aún.</p>';
+      }
+    }
+
+    // Cargar contenidos automáticamente al iniciar
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarPublicaciones('_noticias', 'contenedor-noticias');
+      cargarPublicaciones('_literatura', 'contenedor-literatura');
+      cargarPublicaciones('_deporte', 'contenedor-deporte');
+      cargarPublicaciones('_humor', 'contenedor-humor');
+      cargarPublicaciones('_documentos', 'contenedor-documentos');
+      cargarPublicaciones('_paginas_amigas', 'contenedor-amigas');
+    });
   </script>
 
 </body>
