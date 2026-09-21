@@ -37,6 +37,7 @@
                                 <label for="seccionDestino" class="form-label fw-bold">Sección de Destino</label>
                                 <select class="form-select" id="seccionDestino" required>
                                     <option value="_noticias">📰 Noticias</option>
+                                    <option value="_galeria">📸 Galería de Fotos</option>
                                     <option value="_literatura">📚 Literatura y Poesía</option>
                                     <option value="_documentos">📄 Documentos / Archivos</option>
                                     <option value="_humor">😄 Humor</option>
@@ -45,18 +46,18 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="titulo" class="form-label fw-bold">Título de la Publicación</label>
+                                <label for="titulo" class="form-label fw-bold">Título de la Publicación / Foto</label>
                                 <input type="text" class="form-control" id="titulo" placeholder="Escribe un título claro..." required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="contenido" class="form-label fw-bold">Contenido o Texto</label>
-                                <textarea class="form-control" id="contenido" rows="6" placeholder="Escribe el texto de tu publicación aquí..." required></textarea>
+                                <label for="contenido" class="form-label fw-bold">Descripción o Contenido</label>
+                                <textarea class="form-control" id="contenido" rows="5" placeholder="Escribe una breve descripción o texto..." required></textarea>
                             </div>
 
                             <div class="mb-3">
-                                <label for="enlaceAdjunto" class="form-label fw-bold">Enlace / Imagen / Adjunto (Opcional)</label>
-                                <input type="url" class="form-control" id="enlaceAdjunto" placeholder="https://ejemplo.com/archivo.pdf (Dejar en blanco si es solo texto)">
+                                <label for="enlaceAdjunto" class="form-label fw-bold">Enlace directo a la Foto (Postimages) o Adjunto</label>
+                                <input type="url" class="form-control" id="enlaceAdjunto" placeholder="https://i.postimg.cc/xxxxx/foto.jpg">
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="btnPublicar">
@@ -76,7 +77,6 @@
         const REPO_USER = 'lfuentesu';
         const REPO_NAME = 'sute-jubilados';
 
-        // Recuperar Token del almacenamiento local si ya fue guardado antes
         document.addEventListener('DOMContentLoaded', () => {
             const tokenGuardado = localStorage.getItem('sute_github_token');
             if (tokenGuardado) {
@@ -100,29 +100,30 @@
                 return;
             }
 
-            // Guardar el Token en el navegador para la próxima vez
             localStorage.setItem('sute_github_token', token);
 
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publicando en la web...';
             mensajeDiv.innerHTML = '';
 
-            // Fecha actual formateada
             const hoy = new Date();
             const fechaTxt = `${hoy.getDate()}/${hoy.getMonth() + 1}/${hoy.getFullYear()}`;
 
-            // Contenido en formato Markdown
             let mdContent = `# ${titulo}\n\n*Fecha:* ${fechaTxt}\n\n${contenido}`;
+            
+            // Si es galería o hay imagen, incrustamos la imagen directamente en el Markdown
             if (enlace) {
-                mdContent += `\n\n[Ver adjunto / enlace relacionado](${enlace})`;
+                if (carpeta === '_galeria' || enlace.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                    mdContent += `\n\n![${titulo}](${enlace})\n\n[Ver imagen a tamaño completo](${enlace})`;
+                } else {
+                    mdContent += `\n\n[Ver adjunto / enlace relacionado](${enlace})`;
+                }
             }
 
-            // Nombre único para el archivo basado en la fecha y hora
             const timestamp = Date.now();
             const nombreArchivo = `post_${timestamp}.md`;
             const rutaArchivo = `${carpeta}/${nombreArchivo}`;
 
-            // Convertir texto a UTF-8 Base64 seguro
             const base64Content = btoa(unescape(encodeURIComponent(mdContent)));
 
             try {
@@ -139,21 +140,21 @@
                 });
 
                 if (res.ok) {
-                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">✅ <strong>¡Publicado con éxito!</strong> Tu escrito ha sido enviado a la web. En 1 o 2 minutos se mostrará en la portada.</div>';
+                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">✅ <strong>¡Publicado con éxito!</strong> El contenido ha sido enviado a la web. En 1 o 2 minutos se actualizará la página.</div>';
                     document.getElementById('titulo').value = '';
                     document.getElementById('contenido').value = '';
                     document.getElementById('enlaceAdjunto').value = '';
                 } else {
                     const errData = await res.json();
                     if (res.status === 401) {
-                        mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ <strong>Token no válido o vencido.</strong> Revisa que el Token de GitHub ingresado en la casilla superior sea el correcto y tenga el permiso "repo" marcado.</div>';
+                        mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ <strong>Token no válido o vencido.</strong> Revisa el Token ingresado.</div>';
                     } else {
                         mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ Error al publicar: ${errData.message || 'Verifica la conexión.'}</div>`;
                     }
                 }
             } catch (err) {
                 console.error(err);
-                mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ Error de conexión al publicar. Revisa tu señal de internet.</div>';
+                mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ Error de conexión al publicar.</div>';
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill me-2"></i>🚀 Publicar en el Sitio Web';
