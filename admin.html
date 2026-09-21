@@ -1,249 +1,164 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración General | SUTE Pensionados</title>
-  <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; color: #333; }
-    header { background-color: #003366; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
-    header h2 { margin: 0; font-size: 1.4rem; }
-    header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; }
-    main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
-    .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 25px; }
-    h3 { margin-top: 0; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; }
-    label { display: block; font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #444; }
-    input[type="text"], input[type="password"], input[type="date"], textarea, select {
-      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem; box-sizing: border-box;
-    }
-    textarea { height: 120px; resize: vertical; }
-    button { background-color: #28a745; color: white; font-weight: bold; font-size: 1rem; border: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 100%; }
-    .btn-aprobar { background-color: #28a745; width: auto; margin-top: 10px; padding: 8px 15px; font-size: 0.9rem; margin-right: 10px; }
-    .btn-descartar { background-color: #dc3545; width: auto; margin-top: 10px; padding: 8px 15px; font-size: 0.9rem; }
-    .solicitud-card { border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-top: 15px; background-color: #fcfcfc; }
-    .solicitud-header { font-weight: bold; color: #003366; display: flex; justify-content: space-between; }
-    #status { margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; text-align: center; display: none; }
-    .success { background-color: #d4edda; color: #155724; }
-    .error { background-color: #f8d7da; color: #721c24; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - SUTE Jubilados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card-admin { border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 10px; }
+        .header-admin { background-color: #0056b3; color: white; border-radius: 10px 10px 0 0; padding: 1.5rem; }
+    </style>
 </head>
 <body>
 
-  <header>
-    <h2>⚙️ Panel de Administración General</h2>
-    <a href="index.html">⬅️ Volver al Sitio</a>
-  </header>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card card-admin">
+                    <div class="header-admin text-center">
+                        <h2 class="mb-1"><i class="bi bi-shield-lock-fill me-2"></i>Panel de Publicación</h2>
+                        <p class="mb-0 text-light small">Sindicato Único de Trabajadores de la Educación</p>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <div class="mb-4">
+                            <label for="ghToken" class="form-label fw-bold">Token de Acceso a GitHub</label>
+                            <input type="password" class="form-control" id="ghToken" placeholder="Pega aquí tu token (ghp_... o github_pat_...)">
+                            <div class="form-text">Ingresa tu Token personal para autorizar las publicaciones en el sitio web.</div>
+                        </div>
 
-  <main>
-    <div class="card">
-      <h3>🔑 Claves de Acceso y Configuración</h3>
-      <label for="clave">1. Contraseña del Panel:</label>
-      <input type="password" id="clave" value="SUTEPENSIONADOS">
-      
-      <label for="token-usr">2. Token Personal de GitHub (ghp_...):</label>
-      <input type="password" id="token-usr" placeholder="Pega aquí tu token ghp_">
+                        <hr class="my-4">
 
-      <label for="apps-script-url">3. URL de Google Apps Script (Planilla):</label>
-      <input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/.../exec">
-      <button onclick="guardarConfiguracion()" style="background-color: #17a2b8; margin-top: 10px;">💾 Guardar Configuración</button>
-    </div>
+                        <form id="formPublicar">
+                            <div class="mb-3">
+                                <label for="seccionDestino" class="form-label fw-bold">Sección de Destino</label>
+                                <select class="form-select" id="seccionDestino" required>
+                                    <option value="_noticias">📰 Noticias</option>
+                                    <option value="_literatura">📚 Literatura y Poesía</option>
+                                    <option value="_documentos">📄 Documentos / Archivos</option>
+                                    <option value="_humor">😄 Humor</option>
+                                    <option value="_deportes">🏆 Deportes</option>
+                                </select>
+                            </div>
 
-    <!-- MÓDULO DE REVISIÓN Y APROBACIÓN -->
-    <div class="card">
-      <h3>📥 Revision de Mensajes y Cartas Pendientes</h3>
-      <button onclick="cargarSolicitudes()" style="background-color: #0056b3; margin-top: 0;">🔄 Cargar Envíos Pendientes</button>
-      <div id="lista-solicitudes"><p style="color: #666; margin-top: 15px;">Haz clic en el botón superior para revisar solicitudes enviadas por los afiliados.</p></div>
-    </div>
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label fw-bold">Título de la Publicación</label>
+                                <input type="text" class="form-control" id="titulo" placeholder="Escribe un título claro..." required>
+                            </div>
 
-    <!-- MÓDULO DE PUBLICACIÓN DIRECTA -->
-    <div class="card">
-      <h3>📢 Crear Publicación Directa en el Sitio</h3>
-      
-      <label for="tipo">Sección / Tipo de Contenido:</label>
-      <select id="tipo" onchange="cambiarTipo()">
-        <option value="noticia">📰 Noticia o Comunicado</option>
-        <option value="literatura">📖 Creación Literaria (Cuentos / Poesía)</option>
-        <option value="deporte">🏆 Deporte y Valores (Homenajes / Ética)</option>
-        <option value="humor">😄 Humor y Anécdotas Magisteriales</option>
-        <option value="documento">📄 Documento / PDF / Archivo</option>
-        <option value="amiga">🔗 Página Amiga / Enlace</option>
-      </select>
+                            <div class="mb-3">
+                                <label for="contenido" class="form-label fw-bold">Contenido o Texto</label>
+                                <textarea class="form-control" id="contenido" rows="6" placeholder="Escribe el texto de tu publicación aquí..." required></textarea>
+                            </div>
 
-      <label for="titulo">Título de la Publicación:</label>
-      <input type="text" id="titulo" placeholder="Ej: Obra, homenaje o titular de la noticia">
+                            <div class="mb-3">
+                                <label for="enlaceAdjunto" class="form-label fw-bold">Enlace / Imagen / Adjunto (Opcional)</label>
+                                <input type="url" class="form-control" id="enlaceAdjunto" placeholder="https://ejemplo.com/archivo.pdf (Dejar en blanco si es solo texto)">
+                            </div>
 
-      <div id="sec-fecha">
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha">
-      </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="btnPublicar">
+                                <i class="bi bi-rocket-takeoff-fill me-2"></i>🚀 Publicar en el Sitio Web
+                            </button>
+                        </form>
 
-      <div id="sec-url" style="display: none;">
-        <label for="url">Enlace / Imagen / Adjunto (Opcional):</label>
-        <input type="text" id="url" placeholder="https://...">
-      </div>
+                        <div id="mensajeResultado" class="mt-4"></div>
 
-      <label for="contenido">Texto o Contenido Principal:</label>
-      <textarea id="contenido" placeholder="Escribe aquí el texto, cuento o anécdota..."></textarea>
-
-      <button onclick="publicar()">🚀 Publicar en el Sitio Web</button>
-      <div id="status"></div>
-    </div>
-  </main>
-
-  <script>
-    const CLAVE_CORRECTA = "SUTEPENSIONADOS";
-    document.getElementById('fecha').valueAsDate = new Date();
-
-    if (localStorage.getItem('sute_github_token')) {
-      document.getElementById('token-usr').value = localStorage.getItem('sute_github_token');
-    }
-    if (localStorage.getItem('sute_script_url')) {
-      document.getElementById('apps-script-url').value = localStorage.getItem('sute_script_url');
-    }
-
-    function guardarConfiguracion() {
-      const token = document.getElementById('token-usr').value.trim();
-      const url = document.getElementById('apps-script-url').value.trim();
-      localStorage.setItem('sute_github_token', token);
-      localStorage.setItem('sute_script_url', url);
-      alert('¡Configuración guardada en tu navegador!');
-    }
-
-    function cambiarTipo() {
-      const tipo = document.getElementById('tipo').value;
-      document.getElementById('sec-url').style.display = (tipo === 'literatura' || tipo === 'deporte' || tipo === 'documento' || tipo === 'amiga') ? 'block' : 'none';
-    }
-
-    async function cargarSolicitudes() {
-      const scriptUrl = localStorage.getItem('sute_script_url') || document.getElementById('apps-script-url').value.trim();
-      const divLista = document.getElementById('lista-solicitudes');
-
-      if (!scriptUrl) {
-        alert('Por favor, ingresa y guarda la URL de Google Apps Script en la casilla de configuración.');
-        return;
-      }
-
-      divLista.innerHTML = '<p>⏳ Cargando envíos desde la planilla...</p>';
-
-      try {
-        const res = await fetch(scriptUrl);
-        const datos = await res.json();
-        const pendientes = datos.filter(d => d.estado === 'Pendiente');
-
-        if (pendientes.length === 0) {
-          divLista.innerHTML = '<p style="color: #28a745; font-weight: bold;">✅ No hay solicitudes pendientes por revisar.</p>';
-          return;
-        }
-
-        divLista.innerHTML = '';
-        pendientes.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'solicitud-card';
-          card.innerHTML = `
-            <div class="solicitud-header">
-              <span>${item.titulo || 'Sin Título'} (${item.seccion.toUpperCase()})</span>
-              <span>📅 ${item.fecha ? item.fecha.substring(0, 10) : ''}</span>
+                    </div>
+                </div>
             </div>
-            <p><strong>Remitente:</strong> ${item.nombre} (${item.correo})</p>
-            <p style="white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 4px;">${item.mensaje}</p>
-            <button class="btn-aprobar" onclick="procesarSolicitud(${item.id}, 'Aprobar', '${escapeHtml(item.seccion)}', '${escapeHtml(item.titulo)}', '${escapeHtml(item.mensaje)}')">✅ Aprobar y Publicar</button>
-            <button class="btn-descartar" onclick="procesarSolicitud(${item.id}, 'Descartar')">❌ Descartar</button>
-          `;
-          divLista.appendChild(card);
-        });
-      } catch (err) {
-        divLista.innerHTML = '<p style="color: red;">Error al cargar las solicitudes. Revisa la URL de Apps Script.</p>';
-      }
-    }
+        </div>
+    </div>
 
-    function escapeHtml(text) {
-      return (text || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
-    }
+    <script>
+        const REPO_USER = 'lfuentesu';
+        const REPO_NAME = 'sute-jubilados';
 
-    async function procesarSolicitud(row, accion, seccion, titulo, mensaje) {
-      const scriptUrl = localStorage.getItem('sute_script_url') || document.getElementById('apps-script-url').value.trim();
-      const token = localStorage.getItem('sute_github_token') || document.getElementById('token-usr').value.trim();
-
-      if (accion === 'Aprobar') {
-        if (!token) { alert('Necesitas ingresar tu Token de GitHub para publicar.'); return; }
-        
-        // Publicar automáticamente en GitHub
-        const fecha = new Date().toISOString().split('T')[0];
-        const slug = (titulo || 'publicacion').toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-        const ruta = `_${seccion}/${fecha}-${slug}.md`;
-        const contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\n---\n\n${mensaje}`;
-        const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoMd)));
-
-        const resGitHub = await fetch(`https://api.github.com/repos/lfuentesu/sute-jubilados/contents/${ruta}`, {
-          method: 'PUT',
-          headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: `Aprobado desde panel: ${titulo}`, content: contenidoBase64 })
+        // Recuperar Token del almacenamiento local si ya fue guardado antes
+        document.addEventListener('DOMContentLoaded', () => {
+            const tokenGuardado = localStorage.getItem('sute_github_token');
+            if (tokenGuardado) {
+                document.getElementById('ghToken').value = tokenGuardado;
+            }
         });
 
-        if (!resGitHub.ok) { alert('Error al publicar en GitHub.'); return; }
-      }
+        document.getElementById('formPublicar').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-      // Actualizar estado en la Planilla de Google
-      await fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'updateStatus', row: row, status: accion === 'Aprobar' ? 'Aprobado' : 'Descartado' })
-      });
+            const token = document.getElementById('ghToken').value.trim();
+            const carpeta = document.getElementById('seccionDestino').value;
+            const titulo = document.getElementById('titulo').value.trim();
+            const contenido = document.getElementById('contenido').value.trim();
+            const enlace = document.getElementById('enlaceAdjunto').value.trim();
+            const mensajeDiv = document.getElementById('mensajeResultado');
+            const btn = document.getElementById('btnPublicar');
 
-      alert(`Solicitud ${accion === 'Aprobar' ? 'aprobada y publicada' : 'descartada'} correctamente.`);
-      cargarSolicitudes();
-    }
+            if (!token) {
+                mensajeDiv.innerHTML = '<div class="alert alert-warning text-center">Por favor, ingresa tu Token de GitHub en la casilla superior.</div>';
+                return;
+            }
 
-    async function publicar() {
-      const claveIngresada = document.getElementById('clave').value.trim();
-      const tokenIngresado = document.getElementById('token-usr').value.trim();
-      const tipo = document.getElementById('tipo').value;
-      const titulo = document.getElementById('titulo').value.trim();
-      const status = document.getElementById('status');
+            // Guardar el Token en el navegador para la próxima vez
+            localStorage.setItem('sute_github_token', token);
 
-      if (claveIngresada !== CLAVE_CORRECTA) { alert('Contraseña incorrecta.'); return; }
-      if (!tokenIngresado) { alert('Ingresa tu Token de GitHub.'); return; }
-      if (!titulo) { alert('Ingresa un título.'); return; }
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publicando en la web...';
+            mensajeDiv.innerHTML = '';
 
-      localStorage.setItem('sute_github_token', tokenIngresado);
+            // Fecha actual formateada
+            const hoy = new Date();
+            const fechaTxt = `${hoy.getDate()}/${hoy.getMonth() + 1}/${hoy.getFullYear()}`;
 
-      status.style.display = 'block';
-      status.className = '';
-      status.innerText = '⏳ Publicando contenido...';
+            // Contenido en formato Markdown
+            let mdContent = `# ${titulo}\n\n*Fecha:* ${fechaTxt}\n\n${contenido}`;
+            if (enlace) {
+                mdContent += `\n\n[Ver adjunto / enlace relacionado](${enlace})`;
+            }
 
-      const repo = 'lfuentesu/sute-jubilados';
-      const slug = titulo.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-      const fecha = document.getElementById('fecha').value;
-      const texto = document.getElementById('contenido').value.trim();
-      const url = document.getElementById('url').value.trim();
+            // Nombre único para el archivo basado en la fecha y hora
+            const timestamp = Date.now();
+            const nombreArchivo = `post_${timestamp}.md`;
+            const rutaArchivo = `${carpeta}/${nombreArchivo}`;
 
-      let ruta = `_${tipo}/${fecha}-${slug}.md`;
-      if (tipo === 'amiga') ruta = `_paginas_amigas/${slug}.md`;
+            // Convertir texto a UTF-8 Base64 seguro
+            const base64Content = btoa(unescape(encodeURIComponent(mdContent)));
 
-      let contenidoMd = `---\ntitle: "${titulo}"\ndate: "${fecha}"\nurl: "${url}"\n---\n\n${texto}`;
-      const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoMd)));
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${rutaArchivo}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Nueva publicacion: ${titulo}`,
+                        content: base64Content
+                    })
+                });
 
-      try {
-        const respuesta = await fetch(`https://api.github.com/repos/${repo}/contents/${ruta}`, {
-          method: 'PUT',
-          headers: { 'Authorization': `token ${tokenIngresado}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: `Publicación [${tipo}]: ${titulo}`, content: contenidoBase64 })
+                if (res.ok) {
+                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">✅ <strong>¡Publicado con éxito!</strong> Tu escrito ha sido enviado a la web. En 1 o 2 minutos se mostrará en la portada.</div>';
+                    document.getElementById('titulo').value = '';
+                    document.getElementById('contenido').value = '';
+                    document.getElementById('enlaceAdjunto').value = '';
+                } else {
+                    const errData = await res.json();
+                    if (res.status === 401) {
+                        mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ <strong>Token no válido o vencido.</strong> Revisa que el Token de GitHub ingresado en la casilla superior sea el correcto y tenga el permiso "repo" marcado.</div>';
+                    } else {
+                        mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ Error al publicar: ${errData.message || 'Verifica la conexión.'}</div>`;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ Error de conexión al publicar. Revisa tu señal de internet.</div>';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill me-2"></i>🚀 Publicar en el Sitio Web';
+            }
         });
-
-        if (respuesta.ok) {
-          status.className = 'success';
-          status.innerText = '✅ ¡Publicado correctamente en la web!';
-          document.getElementById('titulo').value = '';
-          document.getElementById('contenido').value = '';
-        } else {
-          throw new Error('Error');
-        }
-      } catch (err) {
-        status.className = 'error';
-        status.innerText = '❌ Error al publicar. Revisa tu Token.';
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>
