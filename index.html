@@ -50,8 +50,8 @@
             margin-top: 3rem;
         }
         .logo-sute {
-            max-height: 50px;
-            margin-right: 10px;
+            max-height: 45px;
+            margin-right: 12px;
         }
     </style>
 </head>
@@ -61,6 +61,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="logo.png" alt="Logo SUTE" class="logo-sute" onerror="this.style.display='none'">
                 <i class="bi bi-journal-bookmark-fill me-2 fs-3 text-primary"></i>
                 <span>SUTE Pensionados y Jubilados</span>
             </a>
@@ -88,7 +89,7 @@
 
     <!-- Contenido Principal -->
     <main class="container my-4" id="publicaciones">
-        <!-- Menú de pestañas para secciones -->
+        <!-- Menú de pestañas para todas las secciones -->
         <ul class="nav nav-pills nav-justified mb-4 shadow-sm bg-white p-2 rounded" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-noticias-tab" data-bs-toggle="pill" data-bs-target="#pills-noticias" type="button" onclick="cargarSeccion('_noticias', 'noticias-container')">
@@ -103,6 +104,16 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-documentos-tab" data-bs-toggle="pill" data-bs-target="#pills-documentos" type="button" onclick="cargarSeccion('_documentos', 'documentos-container')">
                     <i class="bi bi-file-earmark-text me-1"></i> Documentos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-humor-tab" data-bs-toggle="pill" data-bs-target="#pills-humor" type="button" onclick="cargarSeccion('_humor', 'humor-container')">
+                    <i class="bi bi-emoji-smile me-1"></i> Humor
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-deportes-tab" data-bs-toggle="pill" data-bs-target="#pills-deportes" type="button" onclick="cargarSeccion('_deportes', 'deportes-container')">
+                    <i class="bi bi-trophy me-1"></i> Deportes
                 </button>
             </li>
         </ul>
@@ -121,6 +132,16 @@
             </div>
             <div class="tab-pane fade" id="pills-documentos" role="tabpanel">
                 <div id="documentos-container" class="row">
+                    <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-humor" role="tabpanel">
+                <div id="humor-container" class="row">
+                    <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-deportes" role="tabpanel">
+                <div id="deportes-container" class="row">
                     <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>
                 </div>
             </div>
@@ -150,6 +171,8 @@
                                         <option value="Noticias">Noticias</option>
                                         <option value="Literatura">Literatura y Poesía</option>
                                         <option value="Documentos">Documentos</option>
+                                        <option value="Humor">Humor</option>
+                                        <option value="Deportes">Deportes</option>
                                         <option value="Consulta">Consulta General</option>
                                     </select>
                                 </div>
@@ -198,6 +221,7 @@
 
                 const archivos = await res.json();
                 
+                // Filtrar archivos .md ignorando README y txt auxiliares
                 const archivosMd = archivos.filter(f => f.name.endsWith('.md') && f.name.toLowerCase() !== 'readme.md');
 
                 if (archivosMd.length === 0) {
