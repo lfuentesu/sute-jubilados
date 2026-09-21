@@ -52,12 +52,18 @@
 
                             <div class="mb-3">
                                 <label for="contenido" class="form-label fw-bold">Descripción o Contenido</label>
-                                <textarea class="form-control" id="contenido" rows="5" placeholder="Escribe una breve descripción o texto..." required></textarea>
+                                <textarea class="form-control" id="contenido" rows="4" placeholder="Escribe una breve descripción o texto..." required></textarea>
                             </div>
 
                             <div class="mb-3">
-                                <label for="enlaceAdjunto" class="form-label fw-bold">Enlace directo a la Foto (Postimages) o Adjunto</label>
-                                <input type="url" class="form-control" id="enlaceAdjunto" placeholder="https://i.postimg.cc/xxxxx/foto.jpg">
+                                <label for="archivoFoto" class="form-label fw-bold">📁 Seleccionar imagen desde tu equipo (Opcional)</label>
+                                <input type="file" class="form-control" id="archivoFoto" accept="image/*">
+                                <div class="form-text">Selecciona una fotografía (JPG, PNG) directamente desde tu computador o celular.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="enlaceAdjunto" class="form-label fw-bold">O pega un Enlace/Adjunto web externo</label>
+                                <input type="url" class="form-control" id="enlaceAdjunto" placeholder="https://ejemplo.com/archivo.pdf">
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="btnPublicar">
@@ -84,6 +90,16 @@
             }
         });
 
+        // Función para convertir archivo a Base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
         document.getElementById('formPublicar').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -91,7 +107,8 @@
             const carpeta = document.getElementById('seccionDestino').value;
             const titulo = document.getElementById('titulo').value.trim();
             const contenido = document.getElementById('contenido').value.trim();
-            const enlace = document.getElementById('enlaceAdjunto').value.trim();
+            let enlace = document.getElementById('enlaceAdjunto').value.trim();
+            const inputFile = document.getElementById('archivoFoto');
             const mensajeDiv = document.getElementById('mensajeResultado');
             const btn = document.getElementById('btnPublicar');
 
@@ -103,30 +120,61 @@
             localStorage.setItem('sute_github_token', token);
 
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publicando en la web...';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Procesando y publicando...';
             mensajeDiv.innerHTML = '';
 
-            const hoy = new Date();
-            const fechaTxt = `${hoy.getDate()}/${hoy.getMonth() + 1}/${hoy.getFullYear()}`;
-
-            let mdContent = `# ${titulo}\n\n*Fecha:* ${fechaTxt}\n\n${contenido}`;
-            
-            if (enlace) {
-                if (carpeta === '_galeria' || enlace.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
-                    mdContent += `\n\n![${titulo}](${enlace})\n\n[Ver imagen a tamaño completo](${enlace})`;
-                } else {
-                    mdContent += `\n\n[Ver adjunto / enlace relacionado](${enlace})`;
-                }
-            }
-
             const timestamp = Date.now();
-            const nombreArchivo = `post_${timestamp}.md`;
-            const rutaArchivo = `${carpeta}/${nombreArchivo}`;
-
-            const base64Content = btoa(unescape(encodeURIComponent(mdContent)));
 
             try {
-                const res = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${rutaArchivo}`, {
+                // Si el usuario seleccionó un archivo local, lo subimos a GitHub en una carpeta /imagenes/
+                if (inputFile.files && inputFile.files[0]) {
+                    const file = inputFile.files[0];
+                    const extension = file.name.split('.').pop();
+                    const nombreImagen = `img_${timestamp}.${extension}`;
+                    const rutaImagen = `imagenes/${nombreImagen}`;
+                    const base64Image = await fileToBase64(file);
+
+                    // Subir la imagen a GitHub
+                    const resImg = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${rutaImagen}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Imagen subida: ${nombreImagen}`,
+                            content: base64Image
+                        })
+                    });
+
+                    if (!resImg.ok) {
+                        throw new Error('Error al subir la imagen al servidor.');
+                    }
+
+                    // Usamos la URL cruda directamente de GitHub
+                    enlace = `https://raw.githubusercontent.com/${REPO_USER}/${REPO_NAME}/main/${rutaImagen}`;
+                }
+
+                // Generar el contenido Markdown del Post
+                const hoy = new Date();
+                const fechaTxt = `${hoy.getDate()}/${hoy.getMonth() + 1}/${hoy.getFullYear()}`;
+
+                let mdContent = `# ${titulo}\n\n*Fecha:* ${fechaTxt}\n\n${contenido}`;
+                
+                if (enlace) {
+                    if (carpeta === '_galeria' || enlace.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                        mdContent += `\n\n![${titulo}](${enlace})\n\n[Ver imagen a tamaño completo](${enlace})`;
+                    } else {
+                        mdContent += `\n\n[Ver adjunto / enlace relacionado](${enlace})`;
+                    }
+                }
+
+                const nombreArchivo = `post_${timestamp}.md`;
+                const rutaArchivo = `${carpeta}/${nombreArchivo}`;
+                const base64Content = btoa(unescape(encodeURIComponent(mdContent)));
+
+                // Subir la publicación Markdown a GitHub
+                const resPost = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${rutaArchivo}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `token ${token}`,
@@ -138,22 +186,20 @@
                     })
                 });
 
-                if (res.ok) {
-                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">✅ <strong>¡Publicado con éxito!</strong> El contenido ha sido enviado a la web. En 1 o 2 minutos se actualizará la página.</div>';
+                if (resPost.ok) {
+                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">✅ <strong>¡Publicado con éxito!</strong> El contenido y la imagen se subieron correctamente. En 1 o 2 minutos estará listo en el sitio web.</div>';
                     document.getElementById('titulo').value = '';
                     document.getElementById('contenido').value = '';
                     document.getElementById('enlaceAdjunto').value = '';
+                    inputFile.value = '';
                 } else {
-                    const errData = await res.json();
-                    if (res.status === 401) {
-                        mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ <strong>Token no válido o vencido.</strong> Revisa el Token ingresado.</div>';
-                    } else {
-                        mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ Error al publicar: ${errData.message || 'Verifica la conexión.'}</div>`;
-                    }
+                    const errData = await resPost.json();
+                    mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ Error al publicar: ${errData.message || 'Verifica tu Token.'}</div>`;
                 }
+
             } catch (err) {
                 console.error(err);
-                mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">❌ Error de conexión al publicar.</div>';
+                mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ ${err.message || 'Error de conexión.'}</div>`;
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill me-2"></i>🚀 Publicar en el Sitio Web';
