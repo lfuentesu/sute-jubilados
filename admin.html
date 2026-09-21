@@ -111,7 +111,6 @@
 
             let mdContent = `# ${titulo}\n\n*Fecha:* ${fechaTxt}\n\n${contenido}`;
             
-            // Si es galería o hay imagen, incrustamos la imagen directamente en el Markdown
             if (enlace) {
                 if (carpeta === '_galeria' || enlace.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
                     mdContent += `\n\n![${titulo}](${enlace})\n\n[Ver imagen a tamaño completo](${enlace})`;
