@@ -49,6 +49,10 @@
             padding: 2rem 0;
             margin-top: 3rem;
         }
+        .logo-sute {
+            max-height: 50px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +60,10 @@
     <!-- Navegación Principal -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-journal-bookmark-fill me-2"></i>SUTE Pensionados y Jubilados</a>
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="bi bi-journal-bookmark-fill me-2 fs-3 text-primary"></i>
+                <span>SUTE Pensionados y Jubilados</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -64,7 +71,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#publicaciones">Publicaciones</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto / Enviar Escrito</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link text-primary fw-bold" href="admin.html" target="_blank"><i class="bi bi-shield-lock me-1"></i> Administración</a></li>
                 </ul>
             </div>
         </div>
@@ -172,7 +180,6 @@
         const REPO_USER = 'lfuentesu';
         const REPO_NAME = 'sute-jubilados';
 
-        // Cargar sección al iniciar
         document.addEventListener('DOMContentLoaded', () => {
             cargarSeccion('_noticias', 'noticias-container');
         });
@@ -191,7 +198,6 @@
 
                 const archivos = await res.json();
                 
-                // Filtrar solo archivos .md ignorando README y txt auxiliares
                 const archivosMd = archivos.filter(f => f.name.endsWith('.md') && f.name.toLowerCase() !== 'readme.md');
 
                 if (archivosMd.length === 0) {
@@ -201,7 +207,6 @@
 
                 contenedor.innerHTML = '';
                 
-                // Procesar cada archivo .md
                 for (const archivo of archivosMd) {
                     const resContenido = await fetch(archivo.download_url);
                     const texto = await resContenido.text();
