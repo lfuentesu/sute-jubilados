@@ -132,7 +132,9 @@
     <script>
         const REPO_USER = 'lfuentesu';
         const REPO_NAME = 'sute-jubilados';
-
+marked.setOptions({
+    breaks: true
+});
         // Función para limpiar el encabezado YAML (Front Matter)
         function limpiarFrontMatter(texto) {
             return texto.replace(/^---[\s\S]*?---\s*/, '');
