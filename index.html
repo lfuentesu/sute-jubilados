@@ -64,6 +64,9 @@
                 <button class="nav-link" id="deportes-tab" data-bs-toggle="tab" data-bs-target="#deportes" type="button" onclick="cargarSeccion('_deportes', 'deportes-lista')">🏆 Deportes</button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="enlaces-tab" data-bs-toggle="tab" data-bs-target="#enlaces" type="button">🔗 Páginas Amigas</button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="contacto-tab" data-bs-toggle="tab" data-bs-target="#contacto" type="button">✉️ Contacto y Colaboraciones</button>
             </li>
         </ul>
@@ -77,6 +80,56 @@
             <div class="tab-pane fade" id="humor" role="tabpanel"><div id="humor-lista" class="row"></div></div>
             <div class="tab-pane fade" id="deportes" role="tabpanel"><div id="deportes-lista" class="row"></div></div>
             
+            <!-- Pestaña Páginas Amigas -->
+            <div class="tab-pane fade" id="enlaces" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <div class="card card-post p-4 mb-4">
+                            <h3 class="fw-bold text-primary mb-3 text-center"><i class="bi bi-link-45deg me-2"></i>Páginas Amigas y Enlaces de Interés</h3>
+                            <p class="text-muted text-center mb-4">Selección de portales institucionales, informativos y de servicios para nuestras y nuestros afiliados.</p>
+                            
+                            <div class="row g-3">
+                                <!-- IPS / ChileAtiende -->
+                                <div class="col-md-6">
+                                    <div class="card h-100 p-3 border-0 bg-light shadow-sm">
+                                        <h5 class="fw-bold text-primary mb-1"><i class="bi bi-building me-2"></i>ChileAtiende / IPS</h5>
+                                        <p class="text-muted small mb-3">Consulta de pensiones, trámites previsionales y beneficios del Estado.</p>
+                                        <a href="https://www.chileatiende.gob.cl" target="_blank" class="btn btn-outline-primary btn-sm fw-bold mt-auto">Visitar Sitio Web ↗</a>
+                                    </div>
+                                </div>
+
+                                <!-- SENAMA -->
+                                <div class="col-md-6">
+                                    <div class="card h-100 p-3 border-0 bg-light shadow-sm">
+                                        <h5 class="fw-bold text-primary mb-1"><i class="bi bi-heart-pulse me-2"></i>SENAMA</h5>
+                                        <p class="text-muted small mb-3">Servicio Nacional del Adulto Mayor: programas, derechos y actividades.</p>
+                                        <a href="https://www.senama.gob.cl" target="_blank" class="btn btn-outline-primary btn-sm fw-bold mt-auto">Visitar Sitio Web ↗</a>
+                                    </div>
+                                </div>
+
+                                <!-- Colegio de Profesores -->
+                                <div class="col-md-6">
+                                    <div class="card h-100 p-3 border-0 bg-light shadow-sm">
+                                        <h5 class="fw-bold text-primary mb-1"><i class="bi bi-journal-bookmark me-2"></i>Colegio de Profesoras y Profesores</h5>
+                                        <p class="text-muted small mb-3">Noticias, gremio docente y novedades de la educación en Chile.</p>
+                                        <a href="https://www.colegiodeprofesores.cl" target="_blank" class="btn btn-outline-primary btn-sm fw-bold mt-auto">Visitar Sitio Web ↗</a>
+                                    </div>
+                                </div>
+
+                                <!-- MINEDUC -->
+                                <div class="col-md-6">
+                                    <div class="card h-100 p-3 border-0 bg-light shadow-sm">
+                                        <h5 class="fw-bold text-primary mb-1"><i class="bi bi-book me-2"></i>Ministerio de Educación (MINEDUC)</h5>
+                                        <p class="text-muted small mb-3">Información oficial del sistema educativo nacional y normativas.</p>
+                                        <a href="https://www.mineduc.cl" target="_blank" class="btn btn-outline-primary btn-sm fw-bold mt-auto">Visitar Sitio Web ↗</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Pestaña de Contacto y Colaboraciones -->
             <div class="tab-pane fade" id="contacto" role="tabpanel">
                 <div class="row justify-content-center">
@@ -132,9 +185,12 @@
     <script>
         const REPO_USER = 'lfuentesu';
         const REPO_NAME = 'sute-jubilados';
-marked.setOptions({
-    breaks: true
-});
+
+        // Configuración para que respete saltos de línea automáticos
+        marked.setOptions({
+            breaks: true
+        });
+
         // Función para limpiar el encabezado YAML (Front Matter)
         function limpiarFrontMatter(texto) {
             return texto.replace(/^---[\s\S]*?---\s*/, '');
