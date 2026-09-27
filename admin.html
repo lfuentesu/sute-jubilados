@@ -5,77 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - SUTE Jubilados</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card-admin { border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 10px; }
-        .header-admin { background-color: #0056b3; color: white; border-radius: 10px 10px 0 0; padding: 1.5rem; }
+        body { background-color: #f8f9fa; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .admin-card { max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="admin-card">
+            <h2 class="text-primary fw-bold text-center mb-4">Panel de Administración</h2>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold">Token de Acceso GitHub</label>
+                <input type="password" id="ghToken" class="form-control" placeholder="ghp_...">
+                <div class="form-text">Ingresa tu token de acceso de GitHub para autorizar la publicación.</div>
+            </div>
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card card-admin">
-                    <div class="header-admin text-center">
-                        <h2 class="mb-1"><i class="bi bi-shield-lock-fill me-2"></i>Panel de Publicación</h2>
-                        <p class="mb-0 text-light small">Sindicato Único de Trabajadores de la Educación</p>
-                    </div>
-                    <div class="card-body p-4">
-                        
-                        <div class="mb-4">
-                            <label for="ghToken" class="form-label fw-bold">Token de Acceso a GitHub</label>
-                            <input type="password" class="form-control" id="ghToken" placeholder="Pega aquí tu token (ghp_... o github_pat_...)">
-                            <div class="form-text">Ingresa tu Token personal para autorizar las publicaciones en el sitio web.</div>
-                        </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Sección a Publicar</label>
+                <select id="seccion" class="form-select" onchange="cambiarSeccion()">
+                    <option value="_noticias">📰 Noticias</option>
+                    <option value="_galeria">📸 Galería de Fotos</option>
+                    <option value="_literatura">📚 Literatura</option>
+                    <option value="_documentos">📄 Documentos</option>
+                    <option value="_humor">😄 Humor</option>
+                    <option value="_deportes">🏆 Deportes</option>
+                    <option value="_enlaces">🔗 Páginas Amigas</option>
+                </select>
+            </div>
 
-                        <hr class="my-4">
+            <!-- Campos estándar de publicaciones -->
+            <div id="camposPublicacion">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Título de la Publicación</label>
+                    <input type="text" id="titulo" class="form-control" placeholder="Escribe el título aquí...">
+                </div>
 
-                        <form id="formPublicar">
-                            <div class="mb-3">
-                                <label for="seccionDestino" class="form-label fw-bold">Sección de Destino</label>
-                                <select class="form-select" id="seccionDestino" required>
-                                    <option value="_noticias">📰 Noticias</option>
-                                    <option value="_galeria">📸 Galería de Fotos</option>
-                                    <option value="_literatura">📚 Literatura y Poesía</option>
-                                    <option value="_documentos">📄 Documentos / Archivos</option>
-                                    <option value="_humor">😄 Humor</option>
-                                    <option value="_deportes">🏆 Deportes</option>
-                                </select>
-                            </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Imagen (Opcional)</label>
+                    <input type="file" id="imagenInput" class="form-control" accept="image/*">
+                </div>
 
-                            <div class="mb-3">
-                                <label for="titulo" class="form-label fw-bold">Título de la Publicación / Foto</label>
-                                <input type="text" class="form-control" id="titulo" placeholder="Escribe un título claro..." required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="contenido" class="form-label fw-bold">Descripción o Contenido</label>
-                                <textarea class="form-control" id="contenido" rows="4" placeholder="Escribe una breve descripción o texto..." required></textarea>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="archivoFoto" class="form-label fw-bold">📁 Seleccionar imagen desde tu equipo (Opcional)</label>
-                                <input type="file" class="form-control" id="archivoFoto" accept="image/*">
-                                <div class="form-text">Selecciona una fotografía (JPG, PNG) directamente desde tu computador o celular.</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="enlaceAdjunto" class="form-label fw-bold">O pega un Enlace/Adjunto web externo</label>
-                                <input type="url" class="form-control" id="enlaceAdjunto" placeholder="https://ejemplo.com/archivo.pdf">
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="btnPublicar">
-                                <i class="bi bi-rocket-takeoff-fill me-2"></i>🚀 Publicar en el Sitio Web
-                            </button>
-                        </form>
-
-                        <div id="mensajeResultado" class="mt-4"></div>
-
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Contenido del Texto</label>
+                    <textarea id="contenido" class="form-control" rows="6" placeholder="Escribe tu texto o noticia aquí..."></textarea>
                 </div>
             </div>
+
+            <!-- Campos específicos para Páginas Amigas -->
+            <div id="camposEnlace" style="display: none;">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nombre del Sitio Web o Institución</label>
+                    <input type="text" id="enlaceNombre" class="form-control" placeholder="Ej: Diario La Tercera">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Dirección Web (URL completa)</label>
+                    <input type="url" id="enlaceUrl" class="form-control" placeholder="https://www.latercera.com">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Descripción Corta</label>
+                    <textarea id="enlaceDesc" class="form-control" rows="3" placeholder="Ej: Noticias nacionales e internacionales."></textarea>
+                </div>
+            </div>
+
+            <button onclick="publicar()" class="btn btn-primary w-100 py-2 fw-bold">🚀 Publicar Contenido</button>
+
+            <div id="resultado" class="mt-3"></div>
         </div>
     </div>
 
@@ -83,128 +80,143 @@
         const REPO_USER = 'lfuentesu';
         const REPO_NAME = 'sute-jubilados';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const tokenGuardado = localStorage.getItem('sute_github_token');
-            if (tokenGuardado) {
-                document.getElementById('ghToken').value = tokenGuardado;
-            }
-        });
+        function cambiarSeccion() {
+            const seccion = document.getElementById('seccion').value;
+            const camposPub = document.getElementById('camposPublicacion');
+            const camposEnl = document.getElementById('camposEnlace');
 
-        // Función para convertir archivo a Base64
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-            });
+            if (seccion === '_enlaces') {
+                camposPub.style.display = 'none';
+                camposEnl.style.display = 'block';
+            } else {
+                camposPub.style.display = 'block';
+                camposEnl.style.display = 'none';
+            }
         }
 
-        document.getElementById('formPublicar').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
+        async function publicar() {
             const token = document.getElementById('ghToken').value.trim();
-            const carpeta = document.getElementById('seccionDestino').value;
-            const titulo = document.getElementById('titulo').value.trim();
-            const contenido = document.getElementById('contenido').value.trim();
-            let enlace = document.getElementById('enlaceAdjunto').value.trim();
-            const inputFile = document.getElementById('archivoFoto');
-            const mensajeDiv = document.getElementById('mensajeResultado');
-            const btn = document.getElementById('btnPublicar');
+            const seccion = document.getElementById('seccion').value;
+            const resDiv = document.getElementById('resultado');
 
             if (!token) {
-                mensajeDiv.innerHTML = '<div class="alert alert-warning text-center">Por favor, ingresa tu Token de GitHub en la casilla superior.</div>';
+                alert('Por favor ingresa tu token de GitHub.');
                 return;
             }
 
-            localStorage.setItem('sute_github_token', token);
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Procesando y publicando...';
-            mensajeDiv.innerHTML = '';
-
-            const timestamp = Date.now();
+            resDiv.innerHTML = '<div class="alert alert-info">Subiendo contenido a GitHub...</div>';
 
             try {
-                // Si el usuario seleccionó un archivo local, lo subimos a GitHub en una carpeta /imagenes/
-                if (inputFile.files && inputFile.files[0]) {
-                    const file = inputFile.files[0];
-                    const extension = file.name.split('.').pop();
-                    const nombreImagen = `img_${timestamp}.${extension}`;
-                    const rutaImagen = `imagenes/${nombreImagen}`;
-                    const base64Image = await fileToBase64(file);
+                let mdText = '';
+                let tituloLog = '';
 
-                    // Subir la imagen a GitHub
-                    const resImg = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${rutaImagen}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: `Imagen subida: ${nombreImagen}`,
-                            content: base64Image
-                        })
-                    });
+                if (seccion === '_enlaces') {
+                    const nombre = document.getElementById('enlaceNombre').value.trim();
+                    const url = document.getElementById('enlaceUrl').value.trim();
+                    const desc = document.getElementById('enlaceDesc').value.trim();
 
-                    if (!resImg.ok) {
-                        throw new Error('Error al subir la imagen al servidor.');
+                    if (!nombre || !url) {
+                        alert('Por favor ingresa al menos el Nombre y la Dirección Web.');
+                        return;
                     }
 
-                    // Usamos la URL cruda directamente de GitHub
-                    enlace = `https://raw.githubusercontent.com/${REPO_USER}/${REPO_NAME}/main/${rutaImagen}`;
-                }
+                    tituloLog = nombre;
+                    mdText = `---
+title: "${nombre}"
+url: "${url}"
+---
 
-                // Generar el contenido Markdown del Post
-                const hoy = new Date();
-                const fechaTxt = `${hoy.getDate()}/${hoy.getMonth() + 1}/${hoy.getFullYear()}`;
+${desc}`;
 
-                let mdContent = `# ${titulo}\n\n*Fecha:* ${fechaTxt}\n\n${contenido}`;
-                
-                if (enlace) {
-                    if (carpeta === '_galeria' || enlace.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
-                        mdContent += `\n\n![${titulo}](${enlace})\n\n[Ver imagen a tamaño completo](${enlace})`;
-                    } else {
-                        mdContent += `\n\n[Ver adjunto / enlace relacionado](${enlace})`;
+                } else {
+                    const titulo = document.getElementById('titulo').value.trim();
+                    const contenidoTexto = document.getElementById('contenido').value;
+                    const imagenInput = document.getElementById('imagenInput');
+
+                    if (!titulo) {
+                        alert('Por favor ingresa un título.');
+                        return;
                     }
+
+                    tituloLog = titulo;
+                    let imagenUrl = '';
+
+                    if (imagenInput.files.length > 0) {
+                        const file = imagenInput.files[0];
+                        const reader = new FileReader();
+                        
+                        const base64Promise = new Promise((resolve) => {
+                            reader.onload = () => resolve(reader.result.split(',')[1]);
+                            reader.readAsDataURL(file);
+                        });
+
+                        const base64Content = await base64Promise;
+                        const imgFileName = `img_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+                        const imgPath = `imagenes/${imgFileName}`;
+
+                        const resImg = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${imgPath}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `token ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: `Subir imagen ${imgFileName}`,
+                                content: base64Content
+                            })
+                        });
+
+                        if (resImg.ok) {
+                            imagenUrl = `imagenes/${imgFileName}`;
+                        } else {
+                            throw new Error('Error al subir la imagen.');
+                        }
+                    }
+
+                    mdText = `# ${titulo}\n\n`;
+                    if (imagenUrl) {
+                        mdText += `![${titulo}](${imagenUrl})\n\n`;
+                    }
+                    mdText += `${contenidoTexto}\n`;
                 }
 
-                const nombreArchivo = `post_${timestamp}.md`;
-                const rutaArchivo = `${carpeta}/${nombreArchivo}`;
-                const base64Content = btoa(unescape(encodeURIComponent(mdContent)));
+                const fileName = `post_${Date.now()}.md`;
+                const filePath = `${seccion}/${fileName}`;
 
-                // Subir la publicación Markdown a GitHub
-                const resPost = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${rutaArchivo}`, {
+                const utf8Bytes = new TextEncoder().encode(mdText);
+                let binary = '';
+                utf8Bytes.forEach(b => binary += String.fromCharCode(b));
+                const contentBase64 = btoa(binary);
+
+                const resPost = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${filePath}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `token ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: `Nueva publicacion: ${titulo}`,
-                        content: base64Content
+                        message: `Publicar ${tituloLog}`,
+                        content: contentBase64
                     })
                 });
 
                 if (resPost.ok) {
-                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">✅ <strong>¡Publicado con éxito!</strong> El contenido y la imagen se subieron correctamente. En 1 o 2 minutos estará listo en el sitio web.</div>';
+                    resDiv.innerHTML = '<div class="alert alert-success">¡Publicado con éxito! En 1-2 minutos aparecerá en la página principal.</div>';
                     document.getElementById('titulo').value = '';
                     document.getElementById('contenido').value = '';
-                    document.getElementById('enlaceAdjunto').value = '';
-                    inputFile.value = '';
+                    document.getElementById('imagenInput').value = '';
+                    document.getElementById('enlaceNombre').value = '';
+                    document.getElementById('enlaceUrl').value = '';
+                    document.getElementById('enlaceDesc').value = '';
                 } else {
                     const errData = await resPost.json();
-                    mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ Error al publicar: ${errData.message || 'Verifica tu Token.'}</div>`;
+                    throw new Error(errData.message || 'Error al publicar.');
                 }
 
             } catch (err) {
-                console.error(err);
-                mensajeDiv.innerHTML = `<div class="alert alert-danger text-center">❌ ${err.message || 'Error de conexión.'}</div>`;
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill me-2"></i>🚀 Publicar en el Sitio Web';
+                resDiv.innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
             }
-        });
+        }
     </script>
 </body>
 </html>
