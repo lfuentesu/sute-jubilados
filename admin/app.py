@@ -88,7 +88,9 @@ with tab_afiliacion:
     # ---------------------------------------------------------------------------------------------
     # Reemplaza la siguiente URL con el enlace 'embed' de tu Google Form
     # ---------------------------------------------------------------------------------------------
-    URL_FORMULARIO_GOOGLE = "https://docs.google.com/forms/d/e/TU_CODIGO_DE_FORMULARIO/viewform?embedded=true"
+    URL_FORMULARIO_GOOGLE = "https://docs.google.com/forms/d/e/git add admin/app.py
+git commit -m "Actualizar formulario de afiliacion en admin"
+git push origin main/viewform?embedded=true"
     
     components.iframe(URL_FORMULARIO_GOOGLE, height=950, scrolling=True)
 
