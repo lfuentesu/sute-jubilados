@@ -3,184 +3,205 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUTE Pensionados</title>
+  <title>SUTE-PENSIONADOS | Portada Principal</title>
+  <link rel="stylesheet" href="css/estilos.css">
   <style>
+    /* Estilos base para la portada */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f4f6f9;
       color: #333;
     }
-    header {
-      background-color: #0a438b;
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
+    /* Barra de aviso desplazable */
+    .ticker-wrap {
+      width: 100%;
+      background-color: #003366;
+      color: #ffffff;
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      font-weight: 500;
     }
-    header img {
-      max-width: 90px;
+    .ticker {
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker 25s linear infinite;
+    }
+    @keyframes ticker {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+    /* Encabezado */
+    header {
+      background-color: #ffffff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #003366;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .logo-container img {
+      max-height: 70px;
+      border-radius: 6px;
+    }
+    .title-container h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #003366;
+    }
+    .title-container p {
+      margin: 2px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .admin-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    .admin-btn:hover {
+      background-color: #218838;
+    }
+    /* Seccion Central de Saludo */
+    .hero {
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero h2 {
+      color: #003366;
+      font-size: 2rem;
       margin-bottom: 10px;
     }
-    header h1 {
-      margin: 5px 0;
-      font-size: 2rem;
-    }
-    header p {
-      margin: 0;
+    .hero p {
       font-size: 1.1rem;
-      opacity: 0.9;
+      color: #555;
+      line-height: 1.5;
     }
-    nav {
-      background-color: #ffffff;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 5px;
-      padding: 10px;
-      border-bottom: 3px solid #ffcc00;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    nav button {
-      background-color: #e9ecef;
-      border: none;
-      outline: none;
-      padding: 10px 16px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      color: #0a438b;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-    nav button:hover {
-      background-color: #d0d7de;
-    }
-    nav button.active {
-      background-color: #0a438b;
-      color: #ffffff;
-    }
-    .container {
+    /* Rejilla de Secciones en Pestañas Independientes */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
       max-width: 1000px;
-      margin: 20px auto;
+      margin: 30px auto 60px auto;
+      padding: 0 20px;
+    }
+    .card {
       background: white;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-decoration: none;
+      color: #333;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-top: 4px solid #003366;
     }
-    .tab-content {
-      display: none;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     }
-    .tab-content.active {
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
       display: block;
     }
-    iframe {
-      width: 100%;
-      height: 950px;
-      border: none;
-      margin-top: 15px;
+    .card h3 {
+      margin: 0 0 10px 0;
+      color: #003366;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0;
     }
     footer {
       text-align: center;
       padding: 20px;
+      background-color: #003366;
+      color: white;
       font-size: 0.9rem;
-      color: #666;
-      border-top: 1px solid #ddd;
-      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
+  <!-- BARRA DE MENSAJES DESPLAZABLE -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      📢 <strong>Aviso Importante:</strong> Bienvenidos a la plataforma digital de SUTE-PENSIONADOS. Conoce nuestras actividades, comunicados e información relevante para todos los afiliados.
+    </div>
+  </div>
+
+  <!-- ENCABEZADO CON LOGO Y BOTÓN DE ADMIN -->
   <header>
-    <h1>SUTE Pensionados</h1>
-    <p>Sindicato Único de Trabajadores de la Educación</p>
+    <div class="logo-container">
+      <img src="img/logo.jpeg" alt="Logo SUTE">
+      <div class="title-container">
+        <h1>SUTE-PENSIONADOS</h1>
+        <p>Sindicato Único de Trabajadores de la Educación</p>
+      </div>
+    </div>
+    <a href="admin/index.html" class="admin-btn">🔐 Acceso Admin</a>
   </header>
 
-  <nav>
-    <button class="tab-link active" onclick="openTab(event, 'Noticias')">📰 Noticias</button>
-    <button class="tab-link" onclick="openTab(event, 'Galeria')">📷 Galería</button>
-    <button class="tab-link" onclick="openTab(event, 'Literatura')">📚 Literatura</button>
-    <button class="tab-link" onclick="openTab(event, 'Documentos')">📄 Documentos</button>
-    <button class="tab-link" onclick="openTab(event, 'Afiliacion')">✍️ Afiliación</button>
-    <button class="tab-link" onclick="openTab(event, 'Humor')">😄 Humor</button>
-    <button class="tab-link" onclick="openTab(event, 'Deportes')">🏆 Deportes</button>
-    <button class="tab-link" onclick="openTab(event, 'Contacto')">✉️ Contacto y Colaboraciones</button>
-  </nav>
+  <!-- MENSAJE DE BIENVENIDA -->
+  <section class="hero">
+    <h2>Bienvenidos a nuestro Portal Institucional</h2>
+    <p>Selecciona una de las secciones a continuación para acceder a la información, noticias, documentos y solicitud de afiliación.</p>
+  </section>
 
-  <div class="container">
-    
-    <!-- NOTICIAS -->
-    <div id="Noticias" class="tab-content active">
-      <h2>¡Bienvenidas y Bienvenidos!</h2>
-    </div>
+  <!-- TARJETAS NAVEGABLES A PÁGINAS INDEPENDIENTES -->
+  <div class="grid-container">
+    <a href="noticias.html" class="card">
+      <span class="card-icon">📰</span>
+      <h3>Noticias</h3>
+      <p>Comunicados, novedades y publicaciones actualizadas.</p>
+    </a>
 
-    <!-- GALERÍA -->
-    <div id="Galeria" class="tab-content">
-      <h2>Galería de Fotos</h2>
-      <p>Registro fotográfico de nuestras actividades y encuentros.</p>
-    </div>
+    <a href="documentos.html" class="card">
+      <span class="card-icon">📑</span>
+      <h3>Documentos</h3>
+      <p>Estatutos, actas y archivos descargables.</p>
+    </a>
 
-    <!-- LITERATURA -->
-    <div id="Literatura" class="tab-content">
-      <h2>Literatura y Creación</h2>
-      <p>Espacio dedicado a las publicaciones y textos de nuestros asociados.</p>
-    </div>
+    <a href="afiliacion.html" class="card" style="border-top-color: #FFCC00;">
+      <span class="card-icon">✍️</span>
+      <h3>Afiliación</h3>
+      <p>Completa el formulario en línea para incorporarte al sindicato.</p>
+    </a>
 
-    <!-- DOCUMENTOS -->
-    <div id="Documentos" class="tab-content">
-      <h2>Documentos Oficiales</h2>
-      <p>Estatutos, actas e información de la directiva del sindicato.</p>
-    </div>
+    <a href="paginas-amigas.html" class="card">
+      <span class="card-icon">🔗</span>
+      <h3>Páginas Amigas</h3>
+      <p>Organizaciones e instituciones aliadas.</p>
+    </a>
 
-    <!-- AFILIACIÓN -->
-    <div id="Afiliacion" class="tab-content">
-      <h2>✍️ Solicitud de Afiliación en Línea</h2>
-      <p>Complete el siguiente formulario oficial para registrar su incorporación al <strong>SUTE-Pensionados</strong>, indicando su <strong>comuna de residencia</strong>. Cada solicitud será revisada por el directorio sindical.</p>
-      
-      <!-- Formulario de Google Forms Integrado -->
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScE5TlINDuIFFJbt8bAvGFZXcyV0DkXM4ZvTzO7wjX1Y7IfDg/viewform?embedded=true">Cargando formulario...</iframe>
-    </div>
-
-    <!-- HUMOR -->
-    <div id="Humor" class="tab-content">
-      <h2>Espacio de Humor</h2>
-      <p>Rincón de esparcimiento para la comunidad sindical.</p>
-    </div>
-
-    <!-- DEPORTES -->
-    <div id="Deportes" class="tab-content">
-      <h2>Deportes y Vida Sana</h2>
-      <p>Noticias de nuestras actividades recreativas y deportivas.</p>
-    </div>
-
-    <!-- CONTACTO -->
-    <div id="Contacto" class="tab-content">
-      <h2>Contacto y Colaboraciones</h2>
-      <p>Escríbenos a nuestros canales oficiales para resolver dudas o coordinar aportes.</p>
-    </div>
-
+    <a href="contacto.html" class="card">
+      <span class="card-icon">📞</span>
+      <h3>Contacto</h3>
+      <p>Formulario de consultas y datos institucionales.</p>
+    </a>
   </div>
 
   <footer>
-    Sindicato Único de Trabajadores de la Educación / SUTE-Pensionados
+    <p>&copy; SUTE-PENSIONADOS. Todos los derechos reservados.</p>
   </footer>
-
-  <script>
-    function openTab(evt, tabName) {
-      var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tab-content");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].classList.remove("active");
-      }
-      tablinks = document.getElementsByClassName("tab-link");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-      }
-      document.getElementById(tabName).classList.add("active");
-      evt.currentTarget.classList.add("active");
-    }
-  </script>
 
 </body>
 </html>
